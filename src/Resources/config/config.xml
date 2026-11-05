@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+
+    <card>
+        <title>Follow-up e-mail after shipping</title>
+        <title lang="de-DE">Nachfrage-Mail nach dem Versand</title>
+
+        <input-field type="bool">
+            <name>active</name>
+            <label>Active</label>
+            <label lang="de-DE">Aktiv</label>
+            <helpText>Sends one e-mail per order a few days after shipping: review request for the purchased items and similar products of your own. Off by default – switch on per sales channel. Requires running scheduled tasks.</helpText>
+            <helpText lang="de-DE">Sendet je Bestellung einige Tage nach dem Versand eine Mail: Bitte um Bewertung der gekauften Artikel und Hinweis auf eigene ähnliche Produkte. Standardmäßig aus – je Verkaufskanal einschalten. Benötigt laufende geplante Aufgaben.</helpText>
+            <defaultValue>false</defaultValue>
+        </input-field>
+
+        <input-field type="int">
+            <name>daysAfterShipping</name>
+            <label>Days after shipping</label>
+            <label lang="de-DE">Tage nach Versand</label>
+            <helpText>Counted from the moment all deliveries of the order reached the status "Shipped". "Shipped partially" does not count.</helpText>
+            <helpText lang="de-DE">Gezählt ab dem Zeitpunkt, an dem alle Lieferungen der Bestellung den Status „Versandt“ erreicht haben. „Teilweise versandt“ zählt nicht.</helpText>
+            <defaultValue>10</defaultValue>
+            <min>0</min>
+            <max>365</max>
+        </input-field>
+
+        <input-field type="int">
+            <name>maxAgeDays</name>
+            <label>Never catch up after (days after shipping)</label>
+            <label lang="de-DE">Nie nachholen nach (Tage nach Versand)</label>
+            <helpText>Orders shipped longer ago never get an e-mail – protects older orders when the plugin is switched on for the first time. At least "Days after shipping" + 2.</helpText>
+            <helpText lang="de-DE">Bestellungen, deren Versand länger zurückliegt, bekommen nie eine Mail – schützt ältere Bestellungen beim ersten Einschalten. Mindestens „Tage nach Versand“ + 2.</helpText>
+            <defaultValue>60</defaultValue>
+            <min>1</min>
+            <max>730</max>
+        </input-field>
+
+        <input-field type="int">
+            <name>minDaysBetweenMails</name>
+            <label>Minimum interval per customer (days)</label>
+            <label lang="de-DE">Mindestabstand je Kunde (Tage)</label>
+            <helpText>If the same e-mail address received a follow-up e-mail within this period (any sales channel), further orders do not get one. 0 = off.</helpText>
+            <helpText lang="de-DE">Hat dieselbe E-Mail-Adresse in diesem Zeitraum schon eine Nachfrage-Mail bekommen (gleich aus welchem Verkaufskanal), bekommen weitere Bestellungen keine. 0 = aus.</helpText>
+            <defaultValue>30</defaultValue>
+            <min>0</min>
+            <max>3650</max>
+        </input-field>
+
+        <input-field type="int">
+            <name>maxRecommendations</name>
+            <label>Maximum similar products</label>
+            <label lang="de-DE">Höchstens ähnliche Produkte</label>
+            <helpText>First the cross-sellings of the purchased items (e.g. "Customers also bought"), then best sellers from the same categories. Only active, visible, available products that were not purchased. 0 = no recommendations.</helpText>
+            <helpText lang="de-DE">Zuerst die Cross-Sellings der gekauften Artikel (z. B. „Kunden kauften auch“), dann die meistverkauften Artikel derselben Kategorien. Nur aktive, sichtbare, lieferbare und nicht gekaufte Artikel. 0 = keine Vorschläge.</helpText>
+            <defaultValue>4</defaultValue>
+            <min>0</min>
+            <max>12</max>
+        </input-field>
+
+        <input-field type="text-editor">
+            <name>extraText</name>
+            <label>Additional text of this sales channel (HTML)</label>
+            <label lang="de-DE">Zusatztext dieses Verkaufskanals (HTML)</label>
+            <helpText>Appears below the recommendations (variable extraText), e.g. a note on custom parts with a link. Set it per sales channel.</helpText>
+            <helpText lang="de-DE">Erscheint unter den Vorschlägen (Variable extraText), z. B. ein Hinweis auf Anfertigungen mit Link. Je Verkaufskanal einstellen.</helpText>
+        </input-field>
+    </card>
+
+    <card>
+        <title>Google review</title>
+        <title lang="de-DE">Google-Bewertung</title>
+
+        <input-field type="url">
+            <name>googleReviewUrl</name>
+            <label>Link for Google review</label>
+            <label lang="de-DE">Link für Google-Bewertung</label>
+            <helpText>https only, e.g. https://g.page/r/…/review. Shown to all recipients in the same way, after the product reviews. Empty = block omitted.</helpText>
+            <helpText lang="de-DE">Nur https, z. B. https://g.page/r/…/review. Erscheint für alle Empfänger gleich, nach den Produktbewertungen. Leer = Block entfällt.</helpText>
+        </input-field>
+
+        <input-field type="text">
+            <name>googleReviewText</name>
+            <label>Text for the Google review</label>
+            <label lang="de-DE">Text zur Google-Bewertung</label>
+            <helpText>Empty = standard text of the e-mail template ("Would you also like to review us on Google? We would be delighted.").</helpText>
+            <helpText lang="de-DE">Leer = Standardtext der Mail-Vorlage („Sie möchten uns auch bei Google bewerten? Darüber freuen wir uns sehr.“).</helpText>
+        </input-field>
+    </card>
+
+    <card>
+        <title>Objection (opt-out) and notice</title>
+        <title lang="de-DE">Widerspruch und Hinweis</title>
+
+        <input-field type="textarea">
+            <name>checkoutNotice</name>
+            <label>Notice at checkout</label>
+            <label lang="de-DE">Hinweis in der Kasse</label>
+            <helpText>Shown on the order confirmation page below the terms and available as variable novaNachfrageNotice in all e-mail templates (e.g. order confirmation). Empty = standard text from the text modules (novaNachfrage.checkoutNotice).</helpText>
+            <helpText lang="de-DE">Erscheint auf der Bestellbestätigungsseite unter den AGB-Hinweisen und steht in allen Mail-Vorlagen als Variable novaNachfrageNotice bereit (z. B. Bestellbestätigung). Leer = Standardtext aus den Textbausteinen (novaNachfrage.checkoutNotice).</helpText>
+        </input-field>
+
+        <input-field type="bool">
+            <name>optOutAllChannels</name>
+            <label>Opt-out applies to all sales channels</label>
+            <label lang="de-DE">Abmeldung gilt für alle Verkaufskanäle</label>
+            <helpText>Applies to opt-outs via the link in e-mails of this sales channel. Off = only for this sales channel. Entries added manually always apply to all sales channels.</helpText>
+            <helpText lang="de-DE">Gilt für Abmeldungen über den Link in Mails dieses Verkaufskanals. Aus = nur für diesen Verkaufskanal. Manuell eingetragene Widersprüche gelten immer für alle Verkaufskanäle.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
+            <name>respectNewsletterOptOut</name>
+            <label>Also respect newsletter unsubscriptions</label>
+            <label lang="de-DE">Newsletter-Abmeldungen ebenfalls respektieren</label>
+            <helpText>No e-mail if the address is listed as unsubscribed among Shopware's newsletter recipients (status "opted out"). With "applies to all sales channels" any sales channel counts, otherwise only this one.</helpText>
+            <helpText lang="de-DE">Keine Mail, wenn die Adresse bei Shopwares Newsletter-Empfängern als abgemeldet steht (Status „abgemeldet“). Mit „gilt für alle Verkaufskanäle“ zählt jeder Kanal, sonst nur dieser.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
+            <name>listUnsubscribeHeader</name>
+            <label>Send List-Unsubscribe header</label>
+            <label lang="de-DE">Header „List-Unsubscribe“ senden</label>
+            <helpText>Mail programs (e.g. Gmail, Apple Mail) then show their own "Unsubscribe" button (one-click, RFC 8058). Only for https shop domains.</helpText>
+            <helpText lang="de-DE">Mailprogramme (z. B. Gmail, Apple Mail) zeigen dann einen eigenen „Abmelden“-Knopf (One-Click, RFC 8058). Nur bei https-Shopdomains.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+    </card>
+
+    <card>
+        <title>Test mode</title>
+        <title lang="de-DE">Testmodus</title>
+
+        <input-field type="bool">
+            <name>testMode</name>
+            <label>Test mode</label>
+            <label lang="de-DE">Testmodus</label>
+            <helpText>All e-mails go to the test address instead of customers (subject with "[Test]"). Orders mailed in test mode get their real e-mail once test mode is switched off (if still within the time window).</helpText>
+            <helpText lang="de-DE">Alle Mails gehen an die Testadresse statt an Kunden (Betreff mit „[Test]“). Bestellungen, die im Testmodus verschickt wurden, bekommen nach dem Ausschalten ihre echte Mail (sofern noch im Zeitfenster).</helpText>
+            <defaultValue>false</defaultValue>
+        </input-field>
+
+        <input-field type="text">
+            <name>testRecipient</name>
+            <label>Test address</label>
+            <label lang="de-DE">Testadresse</label>
+        </input-field>
+    </card>
+</config>

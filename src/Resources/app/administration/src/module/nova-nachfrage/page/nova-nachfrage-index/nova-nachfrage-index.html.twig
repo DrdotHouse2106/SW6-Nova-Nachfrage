@@ -1,0 +1,111 @@
+{% block nova_nachfrage_index %}
+<sw-page class="nova-nachfrage-index">
+    <template #smart-bar-header>
+        <h2>{{ $tc('nova-nachfrage.general.title') }}</h2>
+    </template>
+
+    <template #smart-bar-actions>
+        <mt-button variant="secondary" :is-loading="isLoading" @click="load">
+            {{ $tc('nova-nachfrage.general.reload') }}
+        </mt-button>
+    </template>
+
+    <template #content>
+        <sw-card-view>
+            <mt-banner v-if="failed" variant="critical">{{ $tc('nova-nachfrage.general.loadFailed') }}</mt-banner>
+
+            <mt-card :title="$tc('nova-nachfrage.stats.title')" :is-loading="isLoading" position-identifier="nova-nachfrage-stats">
+                <div v-if="stats" class="nova-nachfrage-index__stats">
+                    <div><strong>{{ stats.sent30 }}</strong>{{ $tc('nova-nachfrage.stats.sent30') }}</div>
+                    <div><strong>{{ stats.sent }}</strong>{{ $tc('nova-nachfrage.stats.sent') }}</div>
+                    <div><strong>{{ stats.skipped }}</strong>{{ $tc('nova-nachfrage.stats.skipped') }}</div>
+                    <div><strong>{{ stats.failed }}</strong>{{ $tc('nova-nachfrage.stats.failed') }}</div>
+                    <div><strong>{{ stats.test }}</strong>{{ $tc('nova-nachfrage.stats.test') }}</div>
+                    <div><strong>{{ stats.optOuts }}</strong>{{ $tc('nova-nachfrage.stats.optOuts') }}</div>
+                </div>
+                <p class="nova-nachfrage-index__hint">{{ $tc('nova-nachfrage.stats.hint') }}</p>
+            </mt-card>
+
+            <mt-card :title="$tc('nova-nachfrage.upcoming.title')" :is-loading="isLoading" position-identifier="nova-nachfrage-upcoming">
+                <p v-if="!upcoming.length" class="nova-nachfrage-index__hint">{{ $tc('nova-nachfrage.upcoming.empty') }}</p>
+                <table v-else class="nova-nachfrage-index__table">
+                    <thead>
+                        <tr>
+                            <th>{{ $tc('nova-nachfrage.columns.order') }}</th>
+                            <th>{{ $tc('nova-nachfrage.columns.dueAt') }}</th>
+                            <th>{{ $tc('nova-nachfrage.columns.status') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="row in upcoming" :key="row.orderId">
+                            <td><router-link :to="orderLink(row.orderId)">{{ row.orderNumber }}</router-link></td>
+                            <td>{{ date(row.dueAt) }}</td>
+                            <td>{{ statusLabel(row) }} <span v-if="row.reason">– {{ reasonLabel(row.reason) }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </mt-card>
+
+            <mt-card :title="$tc('nova-nachfrage.recent.title')" :is-loading="isLoading" position-identifier="nova-nachfrage-recent">
+                <p v-if="!recent.length" class="nova-nachfrage-index__hint">{{ $tc('nova-nachfrage.recent.empty') }}</p>
+                <table v-else class="nova-nachfrage-index__table">
+                    <thead>
+                        <tr>
+                            <th>{{ $tc('nova-nachfrage.columns.order') }}</th>
+                            <th>{{ $tc('nova-nachfrage.columns.salesChannel') }}</th>
+                            <th>{{ $tc('nova-nachfrage.columns.date') }}</th>
+                            <th>{{ $tc('nova-nachfrage.columns.status') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="row in recent" :key="row.orderId">
+                            <td>
+                                <router-link v-if="row.orderNumber" :to="orderLink(row.orderId)">{{ row.orderNumber }}</router-link>
+                                <span v-else>{{ $tc('nova-nachfrage.recent.deleted') }}</span>
+                            </td>
+                            <td>{{ row.salesChannel || '–' }}</td>
+                            <td>{{ date(row.sentAt || row.createdAt) }}</td>
+                            <td>{{ statusLabel(row) }} <span v-if="row.reason">– {{ reasonLabel(row.reason) }}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </mt-card>
+
+            <mt-card :title="$tc('nova-nachfrage.optOuts.title')" :is-loading="isLoading" position-identifier="nova-nachfrage-optouts">
+                <div v-if="canAdd" class="nova-nachfrage-index__add">
+                    <mt-email-field
+                        v-model="newEmail"
+                        :label="$tc('nova-nachfrage.optOuts.email')"
+                        :placeholder="$tc('nova-nachfrage.optOuts.placeholder')"
+                        @keyup.enter="addOptOut"
+                    />
+                    <mt-button variant="primary" :is-loading="saving" :disabled="saving || !newEmail" @click="addOptOut">
+                        {{ $tc('nova-nachfrage.optOuts.add') }}
+                    </mt-button>
+                </div>
+                <mt-banner v-if="message" :variant="message.variant">{{ message.text }}</mt-banner>
+                <p class="nova-nachfrage-index__hint">{{ $tc('nova-nachfrage.optOuts.hint') }}</p>
+                <p v-if="!optOuts.length" class="nova-nachfrage-index__hint">{{ $tc('nova-nachfrage.optOuts.empty') }}</p>
+                <table v-else class="nova-nachfrage-index__table">
+                    <thead>
+                        <tr>
+                            <th>{{ $tc('nova-nachfrage.columns.hash') }}</th>
+                            <th>{{ $tc('nova-nachfrage.columns.date') }}</th>
+                            <th>{{ $tc('nova-nachfrage.columns.source') }}</th>
+                            <th>{{ $tc('nova-nachfrage.columns.scope') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="row in optOuts" :key="row.hash + row.createdAt">
+                            <td><code>{{ row.hash }}…</code></td>
+                            <td>{{ date(row.createdAt) }}</td>
+                            <td>{{ $tc('nova-nachfrage.source.' + row.source) }}</td>
+                            <td>{{ row.salesChannel || $tc('nova-nachfrage.optOuts.allChannels') }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </mt-card>
+        </sw-card-view>
+    </template>
+</sw-page>
+{% endblock %}

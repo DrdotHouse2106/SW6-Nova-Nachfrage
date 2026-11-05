@@ -1,0 +1,17 @@
+{
+    "novaNachfrage": {
+        "checkoutNotice": "We use your e-mail address to ask for your opinion after shipping and to point out similar products of our own. You can object to this at any time, e.g. via the link in each of these e-mails, without incurring any costs other than the transmission costs at the basic rates.",
+        "unsubscribe": {
+            "title": "Stop follow-up e-mails",
+            "confirmText": "After an order has been shipped, we ask once for your opinion and point out similar products from our range. Don't want to receive these e-mails any more? Please confirm with the button.",
+            "button": "Stop sending these e-mails",
+            "doneTitle": "You have been unsubscribed",
+            "doneTextAll": "We will no longer send you such e-mails – not after future orders either and from none of our shops. You will still receive e-mails about your orders (e.g. order and shipping confirmation).",
+            "doneTextChannel": "This shop will no longer send you such e-mails – not after future orders either. You will still receive e-mails about your orders (e.g. order and shipping confirmation).",
+            "storedNote": "So that we can remember your objection permanently, we store an irreversible checksum (hash) of your e-mail address – not the address itself.",
+            "invalidTitle": "Invalid link",
+            "invalidText": "This unsubscribe link is invalid or incomplete. Please copy the complete link from the e-mail or drop us a line – we will then record your objection manually.",
+            "home": "Go to homepage"
+        }
+    }
+}

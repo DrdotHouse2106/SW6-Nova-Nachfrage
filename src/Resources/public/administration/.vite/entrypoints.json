@@ -1,0 +1,25 @@
+{
+  "base": "/bundles/novanachfrage/administration/",
+  "entryPoints": {
+    "nova-nachfrage": {
+      "css": [
+        "/bundles/novanachfrage/administration/assets/nova-nachfrage-C7hBc01Y.css"
+      ],
+      "dynamic": [],
+      "js": [
+        "/bundles/novanachfrage/administration/assets/nova-nachfrage-BCkVjcFs.js"
+      ],
+      "legacy": false,
+      "preload": []
+    }
+  },
+  "legacy": false,
+  "metadatas": {},
+  "version": [
+    "7.1.0",
+    7,
+    1,
+    0
+  ],
+  "viteServer": null
+}

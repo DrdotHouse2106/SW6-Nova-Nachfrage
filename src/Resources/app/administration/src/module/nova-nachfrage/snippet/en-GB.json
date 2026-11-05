@@ -1,0 +1,78 @@
+{
+    "nova-nachfrage": {
+        "general": {
+            "title": "Nova Follow-up",
+            "description": "Review request and similar products after shipping",
+            "reload": "Refresh",
+            "loadFailed": "The overview could not be loaded."
+        },
+        "stats": {
+            "title": "Key figures",
+            "sent30": "sent (30 days)",
+            "sent": "sent (total)",
+            "skipped": "skipped",
+            "failed": "failed",
+            "test": "test e-mails",
+            "optOuts": "opt-outs",
+            "hint": "Settings: Extensions → My extensions → Nova Nachfrage → Configure (per sales channel). The e-mail template \"Nova Nachfrage\" is under Settings → Email templates. Log entries are deleted after 400 days."
+        },
+        "upcoming": {
+            "title": "Due soon",
+            "empty": "No shipped orders within the time window (or the plugin is not active in any sales channel)."
+        },
+        "recent": {
+            "title": "Recently processed",
+            "empty": "No e-mails processed yet.",
+            "deleted": "(order deleted)"
+        },
+        "optOuts": {
+            "title": "Objections (opt-outs)",
+            "email": "Record objection (e-mail address)",
+            "placeholder": "customer@example.com",
+            "add": "Record",
+            "added": "Objection recorded ({hash}…). Applies to all sales channels.",
+            "exists": "This address was already recorded ({hash}…).",
+            "invalid": "Please enter a valid e-mail address.",
+            "hint": "Only a checksum (hash) of the address is stored – the address itself is not visible here. Opt-outs are never deleted automatically. Removal only via console (nova-nachfrage:optouts remove).",
+            "empty": "No opt-outs yet.",
+            "allChannels": "all sales channels"
+        },
+        "columns": {
+            "order": "Order",
+            "dueAt": "Due from",
+            "status": "Status",
+            "salesChannel": "Sales channel",
+            "date": "Time",
+            "hash": "Hash (shortened)",
+            "source": "Source",
+            "scope": "Applies to"
+        },
+        "status": {
+            "wait": "waiting",
+            "would_send": "sent with the next run",
+            "sent": "sent",
+            "test": "sent to test address",
+            "failed": "failed",
+            "skipped": "skipped",
+            "sending": "sending"
+        },
+        "reason": {
+            "optout": "objection",
+            "newsletter_optout": "unsubscribed from newsletter",
+            "recently_mailed": "minimum interval per customer",
+            "invalid_email": "invalid e-mail address",
+            "cancelled": "order cancelled",
+            "refunded": "payment refunded/cancelled",
+            "no_products": "no products",
+            "mail_failed": "sending failed",
+            "no_test_recipient": "test mode without test address",
+            "order_not_loadable": "order could not be loaded"
+        },
+        "source": {
+            "link": "link in the e-mail",
+            "one_click": "unsubscribe button in mail program",
+            "admin": "administration",
+            "cli": "console"
+        }
+    }
+}

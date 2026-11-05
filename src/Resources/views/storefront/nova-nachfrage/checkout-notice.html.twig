@@ -1,0 +1,8 @@
+{% block nova_nachfrage_checkout_notice %}
+    {% if config('NovaNachfrage.config.active') %}
+        {% set novaNachfrageNotice = config('NovaNachfrage.config.checkoutNotice')|trim %}
+        <p class="nova-nachfrage-notice small text-muted mt-2 mb-0">
+            {% if novaNachfrageNotice %}{{ novaNachfrageNotice|sw_sanitize }}{% else %}{{ 'novaNachfrage.checkoutNotice'|trans|sw_sanitize }}{% endif %}
+        </p>
+    {% endif %}
+{% endblock %}

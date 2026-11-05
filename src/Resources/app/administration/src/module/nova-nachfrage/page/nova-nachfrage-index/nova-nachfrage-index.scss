@@ -1,0 +1,51 @@
+.nova-nachfrage-index {
+    &__stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+
+        div {
+            min-width: 120px;
+        }
+
+        strong {
+            display: block;
+            font-size: 24px;
+        }
+    }
+
+    &__table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid var(--color-border-primary-default, #d1d9e0);
+            vertical-align: top;
+        }
+
+        code {
+            font-size: 13px;
+        }
+    }
+
+    &__add {
+        display: flex;
+        gap: 12px;
+        align-items: flex-end;
+        margin-bottom: 16px;
+
+        .sw-field,
+        .mt-field {
+            flex: 1;
+            margin-bottom: 0;
+        }
+    }
+
+    &__hint {
+        color: var(--color-text-secondary-default, #52667a);
+        font-size: 13px;
+    }
+}

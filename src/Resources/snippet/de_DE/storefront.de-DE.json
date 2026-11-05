@@ -1,0 +1,17 @@
+{
+    "novaNachfrage": {
+        "checkoutNotice": "Wir nutzen Ihre E-Mail-Adresse, um Sie nach dem Versand nach Ihrer Meinung zu fragen und auf eigene ähnliche Produkte hinzuweisen. Dem können Sie jederzeit widersprechen, z. B. per Link in jeder dieser E-Mails, ohne dass andere als die Übermittlungskosten nach den Basistarifen entstehen.",
+        "unsubscribe": {
+            "title": "Keine Nachfrage-Mails mehr erhalten",
+            "confirmText": "Nach dem Versand einer Bestellung fragen wir einmalig nach Ihrer Meinung und weisen auf ähnliche Produkte aus unserem Sortiment hin. Möchten Sie diese E-Mails nicht mehr erhalten? Dann bestätigen Sie bitte mit dem Knopf.",
+            "button": "Keine solchen E-Mails mehr senden",
+            "doneTitle": "Sie sind abgemeldet",
+            "doneTextAll": "Wir senden Ihnen keine solchen E-Mails mehr – auch nicht nach künftigen Bestellungen und in keinem unserer Shops. E-Mails zu Ihren Bestellungen (z. B. Bestell- und Versandbestätigung) erhalten Sie weiterhin.",
+            "doneTextChannel": "Wir senden Ihnen aus diesem Shop keine solchen E-Mails mehr – auch nicht nach künftigen Bestellungen. E-Mails zu Ihren Bestellungen (z. B. Bestell- und Versandbestätigung) erhalten Sie weiterhin.",
+            "storedNote": "Damit wir uns Ihren Widerspruch dauerhaft merken können, speichern wir eine nicht umkehrbare Prüfsumme (Hash) Ihrer E-Mail-Adresse – nicht die Adresse selbst.",
+            "invalidTitle": "Link ungültig",
+            "invalidText": "Dieser Abmeldelink ist ungültig oder unvollständig. Bitte kopieren Sie den vollständigen Link aus der E-Mail oder schreiben Sie uns kurz – wir tragen Ihren Widerspruch dann von Hand ein.",
+            "home": "Zur Startseite"
+        }
+    }
+}

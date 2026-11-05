@@ -1,0 +1,11 @@
+{
+  "main.js": {
+    "file": "assets/nova-nachfrage-BCkVjcFs.js",
+    "name": "nova-nachfrage",
+    "src": "main.js",
+    "isEntry": true,
+    "css": [
+      "assets/nova-nachfrage-C7hBc01Y.css"
+    ]
+  }
+}

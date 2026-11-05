@@ -1,0 +1,43 @@
+{% sw_extends '@Storefront/storefront/base.html.twig' %}
+
+{#
+    Nova Nachfrage: Der Link „Jetzt bewerten“ aus der Mail führt auf die Produktseite mit dem Anker
+    #nova-review. Shopware öffnet den Reiter „Bewertungen“ nicht über die URL – dieses kleine Skript klickt
+    deshalb den Reiter an (Desktop: Bootstrap-Reiter, mobil: Off-Canvas), klappt das Formular auf und
+    scrollt hin. Ohne Anmeldung zeigt Shopware an dieser Stelle die Anmeldung. Nur auf Produktseiten.
+#}
+{% block base_body_script %}
+    {{ parent() }}
+    {% if page.product is defined and config('NovaNachfrage.config.active') %}
+        {% block nova_nachfrage_review_anchor_script %}
+            <script>
+                (function () {
+                    function openReview() {
+                        if (window.location.hash !== '#nova-review') {
+                            return;
+                        }
+                        var tab = document.querySelector('.product-detail-tab-navigation-link.review-tab');
+                        if (!tab) {
+                            return;
+                        }
+                        tab.click();
+                        window.setTimeout(function () {
+                            var scope = document.querySelector('.offcanvas.show') || document;
+                            var form = scope.querySelector('#review-form');
+                            var button = scope.querySelector('.product-detail-review-teaser-btn');
+                            if (form && button && !form.classList.contains('show')) {
+                                button.click();
+                            }
+                            (form || tab).scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 400);
+                    }
+                    if (document.readyState === 'complete') {
+                        openReview();
+                    } else {
+                        window.addEventListener('load', openReview);
+                    }
+                })();
+            </script>
+        {% endblock %}
+    {% endif %}
+{% endblock %}

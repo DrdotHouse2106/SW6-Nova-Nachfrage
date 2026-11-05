@@ -1,0 +1,78 @@
+{
+    "nova-nachfrage": {
+        "general": {
+            "title": "Nova Nachfrage",
+            "description": "Bewertungsanfrage und ähnliche Produkte nach dem Versand",
+            "reload": "Aktualisieren",
+            "loadFailed": "Die Übersicht konnte nicht geladen werden."
+        },
+        "stats": {
+            "title": "Kennzahlen",
+            "sent30": "gesendet (30 Tage)",
+            "sent": "gesendet (gesamt)",
+            "skipped": "übersprungen",
+            "failed": "fehlgeschlagen",
+            "test": "Test-Mails",
+            "optOuts": "Widersprüche",
+            "hint": "Einstellungen: Erweiterungen → Meine Erweiterungen → Nova Nachfrage → Konfigurieren (je Verkaufskanal). Die Mail-Vorlage „Nova Nachfrage“ steht unter Einstellungen → E-Mail-Vorlagen. Versandprotokoll-Einträge werden nach 400 Tagen gelöscht."
+        },
+        "upcoming": {
+            "title": "Demnächst fällig",
+            "empty": "Keine versendeten Bestellungen im Zeitfenster (oder Plugin in keinem Verkaufskanal aktiv)."
+        },
+        "recent": {
+            "title": "Zuletzt verarbeitet",
+            "empty": "Noch keine Mails verarbeitet.",
+            "deleted": "(Bestellung gelöscht)"
+        },
+        "optOuts": {
+            "title": "Widersprüche (Abmeldungen)",
+            "email": "Widerspruch eintragen (E-Mail-Adresse)",
+            "placeholder": "kunde@example.com",
+            "add": "Eintragen",
+            "added": "Widerspruch eingetragen ({hash}…). Gilt für alle Verkaufskanäle.",
+            "exists": "Diese Adresse war bereits eingetragen ({hash}…).",
+            "invalid": "Bitte eine gültige E-Mail-Adresse angeben.",
+            "hint": "Gespeichert wird nur eine Prüfsumme (Hash) der Adresse – die Adresse selbst ist hier nicht sichtbar. Widersprüche werden nie automatisch gelöscht. Entfernen nur per Konsole (nova-nachfrage:optouts remove).",
+            "empty": "Noch keine Widersprüche.",
+            "allChannels": "alle Verkaufskanäle"
+        },
+        "columns": {
+            "order": "Bestellung",
+            "dueAt": "Fällig ab",
+            "status": "Status",
+            "salesChannel": "Verkaufskanal",
+            "date": "Zeitpunkt",
+            "hash": "Hash (gekürzt)",
+            "source": "Quelle",
+            "scope": "Gilt für"
+        },
+        "status": {
+            "wait": "wartet",
+            "would_send": "wird mit dem nächsten Lauf gesendet",
+            "sent": "gesendet",
+            "test": "an Testadresse gesendet",
+            "failed": "fehlgeschlagen",
+            "skipped": "übersprungen",
+            "sending": "wird gesendet"
+        },
+        "reason": {
+            "optout": "Widerspruch",
+            "newsletter_optout": "vom Newsletter abgemeldet",
+            "recently_mailed": "Mindestabstand je Kunde",
+            "invalid_email": "ungültige E-Mail-Adresse",
+            "cancelled": "Bestellung storniert",
+            "refunded": "Zahlung erstattet/storniert",
+            "no_products": "keine Artikel",
+            "mail_failed": "Mailversand gescheitert",
+            "no_test_recipient": "Testmodus ohne Testadresse",
+            "order_not_loadable": "Bestellung nicht ladbar"
+        },
+        "source": {
+            "link": "Link in der Mail",
+            "one_click": "Abmeldeknopf im Mailprogramm",
+            "admin": "Administration",
+            "cli": "Konsole"
+        }
+    }
+}

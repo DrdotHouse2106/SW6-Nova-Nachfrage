@@ -1,0 +1,91 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <!-- Einstellungen und Datenhaltung -->
+        <service id="Nova\Nachfrage\Service\Settings">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+        <service id="Nova\Nachfrage\Service\OptOutStore">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+        </service>
+        <service id="Nova\Nachfrage\Service\SendLog">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+        </service>
+        <service id="Nova\Nachfrage\Service\CandidateFinder">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+        </service>
+        <service id="Nova\Nachfrage\Service\UrlBuilder">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <tag name="kernel.reset" method="reset"/>
+        </service>
+
+        <!-- Mail zusammenstellen und senden -->
+        <service id="Nova\Nachfrage\Service\ProductCollector">
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextFactory"/>
+            <argument type="service" id="sales_channel.product.repository"/>
+            <argument type="service" id="Shopware\Core\Content\Product\SalesChannel\CrossSelling\ProductCrossSellingRoute"/>
+            <argument type="service" id="Nova\Nachfrage\Service\UrlBuilder"/>
+            <argument type="service" id="logger"/>
+        </service>
+        <service id="Nova\Nachfrage\Service\NachfrageSender">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="order.repository"/>
+            <argument type="service" id="Shopware\Core\Content\Mail\Service\MailService"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="Nova\Nachfrage\Service\Settings"/>
+            <argument type="service" id="Nova\Nachfrage\Service\CandidateFinder"/>
+            <argument type="service" id="Nova\Nachfrage\Service\OptOutStore"/>
+            <argument type="service" id="Nova\Nachfrage\Service\SendLog"/>
+            <argument type="service" id="Nova\Nachfrage\Service\ProductCollector"/>
+            <argument type="service" id="Nova\Nachfrage\Service\UrlBuilder"/>
+            <argument type="service" id="logger"/>
+            <argument>%kernel.secret%</argument>
+        </service>
+
+        <service id="Nova\Nachfrage\Subscriber\MailSubscriber">
+            <argument type="service" id="Nova\Nachfrage\Service\Settings"/>
+            <argument type="service" id="translator"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <!-- Geplante Aufgabe (stündlich) -->
+        <service id="Nova\Nachfrage\ScheduledTask\SendTask">
+            <tag name="shopware.scheduled.task"/>
+        </service>
+        <service id="Nova\Nachfrage\ScheduledTask\SendTaskHandler">
+            <argument type="service" id="scheduled_task.repository"/>
+            <argument type="service" id="logger"/>
+            <argument type="service" id="Nova\Nachfrage\Service\NachfrageSender"/>
+            <argument type="service" id="logger"/>
+            <tag name="messenger.message_handler"/>
+        </service>
+
+        <!-- Konsole -->
+        <service id="Nova\Nachfrage\Command\SendCommand">
+            <argument type="service" id="Nova\Nachfrage\Service\NachfrageSender"/>
+            <tag name="console.command"/>
+        </service>
+        <service id="Nova\Nachfrage\Command\OptOutCommand">
+            <argument type="service" id="Nova\Nachfrage\Service\OptOutStore"/>
+            <tag name="console.command"/>
+        </service>
+
+        <!-- Controller -->
+        <service id="Nova\Nachfrage\Controller\UnsubscribeController" public="true">
+            <argument type="service" id="Nova\Nachfrage\Service\OptOutStore"/>
+            <argument type="service" id="Nova\Nachfrage\Service\Settings"/>
+            <argument type="service" id="Shopware\Storefront\Page\GenericPageLoader"/>
+            <argument>%kernel.secret%</argument>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+        <service id="Nova\Nachfrage\Controller\AdminController" public="true">
+            <argument type="service" id="Nova\Nachfrage\Service\NachfrageSender"/>
+            <argument type="service" id="Nova\Nachfrage\Service\SendLog"/>
+            <argument type="service" id="Nova\Nachfrage\Service\OptOutStore"/>
+        </service>
+    </services>
+</container>

@@ -1,0 +1,40 @@
+{% sw_extends '@Storefront/storefront/base.html.twig' %}
+
+{#
+    Abmeldeseite aus der Nachfrage-Mail. Der Link ändert nichts – erst der Knopf (POST) trägt den
+    Widerspruch ein, damit Mail-Scanner und Link-Vorschauen niemanden abmelden.
+    Variablen: novaNachfrage = {state: confirm|done|invalid, action, allChannels}
+#}
+{% block base_head %}
+    {{ parent() }}
+    <meta name="robots" content="noindex, nofollow">
+{% endblock %}
+
+{% block base_content %}
+    {% block nova_nachfrage_unsubscribe %}
+        <div class="container nova-nachfrage-unsubscribe my-5" style="max-width: 640px;">
+            {% if novaNachfrage.state == 'confirm' %}
+                {% block nova_nachfrage_unsubscribe_confirm %}
+                    <h1 class="h3">{{ 'novaNachfrage.unsubscribe.title'|trans|sw_sanitize }}</h1>
+                    <p>{{ 'novaNachfrage.unsubscribe.confirmText'|trans|sw_sanitize }}</p>
+                    <form action="{{ novaNachfrage.action }}" method="post">
+                        <button type="submit" class="btn btn-primary">{{ 'novaNachfrage.unsubscribe.button'|trans|sw_sanitize }}</button>
+                    </form>
+                {% endblock %}
+            {% elseif novaNachfrage.state == 'done' %}
+                {% block nova_nachfrage_unsubscribe_done %}
+                    <h1 class="h3">{{ 'novaNachfrage.unsubscribe.doneTitle'|trans|sw_sanitize }}</h1>
+                    <p>{{ (novaNachfrage.allChannels ? 'novaNachfrage.unsubscribe.doneTextAll' : 'novaNachfrage.unsubscribe.doneTextChannel')|trans|sw_sanitize }}</p>
+                    <p class="text-muted small">{{ 'novaNachfrage.unsubscribe.storedNote'|trans|sw_sanitize }}</p>
+                    <a href="{{ path('frontend.home.page') }}" class="btn btn-outline-primary">{{ 'novaNachfrage.unsubscribe.home'|trans|sw_sanitize }}</a>
+                {% endblock %}
+            {% else %}
+                {% block nova_nachfrage_unsubscribe_invalid %}
+                    <h1 class="h3">{{ 'novaNachfrage.unsubscribe.invalidTitle'|trans|sw_sanitize }}</h1>
+                    <p>{{ 'novaNachfrage.unsubscribe.invalidText'|trans|sw_sanitize }}</p>
+                    <a href="{{ path('frontend.home.page') }}" class="btn btn-outline-primary">{{ 'novaNachfrage.unsubscribe.home'|trans|sw_sanitize }}</a>
+                {% endblock %}
+            {% endif %}
+        </div>
+    {% endblock %}
+{% endblock %}

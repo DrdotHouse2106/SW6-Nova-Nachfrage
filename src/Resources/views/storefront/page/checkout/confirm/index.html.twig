@@ -1,0 +1,17 @@
+{% sw_extends '@Storefront/storefront/page/checkout/confirm/index.html.twig' %}
+
+{#
+    Nova Nachfrage: Hinweis bei Erhebung der E-Mail-Adresse (Bestandskundenwerbung) unter den AGB-Hinweisen.
+    Text aus der Plugin-Konfiguration des Verkaufskanals, sonst Textbaustein novaNachfrage.checkoutNotice.
+#}
+{% block page_checkout_confirm_revocation_control %}
+    {{ parent() }}
+    {% sw_include '@NovaNachfrage/storefront/nova-nachfrage/checkout-notice.html.twig' %}
+{% endblock %}
+
+{% block page_checkout_confirm_tos_auto_confirmed %}
+    {{ parent() }}
+    {% if feature('v6.8.0.0') and config('core.cart.showTosCheckbox') %}
+        {% sw_include '@NovaNachfrage/storefront/nova-nachfrage/checkout-notice.html.twig' %}
+    {% endif %}
+{% endblock %}
