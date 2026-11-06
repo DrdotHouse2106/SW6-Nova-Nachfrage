@@ -22,7 +22,7 @@ auch nicht nach einer neuen Bestellung oder als Gast.
   „Versandt“ stehen. Versandprotokoll in einer eigenen Tabelle – keine Bestellung wird doppelt angeschrieben.
 - **Inhalt:** gekaufte Artikel mit Bild, Link zur Produktseite und Knopf **„Jetzt bewerten“** (öffnet direkt
   das Bewertungsformular), optional ein Block **Google-Bewertung**, danach **ähnliche Produkte**
-  (manuelle Cross-Sellings, dann Artikel mit den meisten gemeinsamen spezifischen Kategorien), ein **Zusatztext je
+  (Cross-Sellings und Bestseller mit gemeinsamer spezifischer Kategorie, gewichtet), ein **Zusatztext je
   Verkaufskanal** und im Fuß der **Widerspruchshinweis mit Abmeldelink**.
 - **Eigener Mail-Vorlagentyp** „Nova Nachfrage“ (`nova_nachfrage`) mit Standardvorlage de/en (HTML und
   Text), bearbeitbar unter *Einstellungen → E-Mail-Vorlagen*. Versand über Shopwares Mailversand mit dem
@@ -81,6 +81,7 @@ Verkaufskanal aktivieren.
 | Nie nachholen nach (Tage nach Versand) | 60 | Ältere Versände bekommen nie eine Mail (Schutz beim ersten Einschalten); mindestens Tage + 2 |
 | Mindestabstand je Kunde (Tage) | 30 | Hat dieselbe Adresse in diesem Zeitraum schon eine Nachfrage-Mail bekommen (gleich aus welchem Kanal), entfällt die Mail für weitere Bestellungen. 0 = aus |
 | Höchstens ähnliche Produkte | 4 | 0 = keine Vorschläge |
+| Kategorien für ähnliche Produkte ignorieren | – | Sammelkategorien wie „Alle Artikel“ |
 | Zusatztext dieses Verkaufskanals (HTML) | leer | Variable `extraText`, erscheint unter den Vorschlägen |
 | Link für Google-Bewertung | leer | nur `https://…`, z. B. `https://g.page/r/…/review`; leer = Block entfällt |
 | Text zur Google-Bewertung | leer | leer = Standardtext der Vorlage |
@@ -131,12 +132,17 @@ Beispiel für einen **Zusatztext** in einem Kanal mit wenigen Standardartikeln:
 
 Variable `recommendations` (`name`, `productNumber`, `url`, `imageUrl`, `price`):
 
-1. **Manuell gepflegte Cross-Selling-Listen** (Typ Produktliste) der gekauften Artikel in ihrer Reihenfolge.
-2. danach Artikel aus **dynamischen Cross-Sellings** und die **meistverkauften Artikel**, aber nur wenn sie
-   mindestens eine **spezifische Kategorie** mit dem Kauf teilen. Spezifisch heißt: direkt am gekauften
-   Artikel zugeordnet, nicht die Hauptnavigation und keine Oberkategorie einer anderen zugeordneten
-   Kategorie (z. B. zählt „Citroën CX“, aber nicht „Fahrzeuge“). Artikel mit den meisten gemeinsamen
-   Kategorien kommen zuerst. Gibt es keine Übereinstimmung, bleibt der Block leer.
+Kandidaten sind die **Cross-Sellings** der gekauften Artikel (auch „Kunden kauften auch“) und die
+**meistverkauften Artikel**. Vorgeschlagen wird nur, was eine **spezifische Kategorie** mit dem Kauf teilt:
+
+- Spezifisch heißt: direkt am gekauften Artikel zugeordnet, im Kategoriebaum **dieses** Verkaufskanals, nicht
+  die Hauptnavigation, keine Oberkategorie einer anderen zugeordneten Kategorie (z. B. zählt „CX“, aber nicht
+  „Fahrzeuge“) und nicht in **„Kategorien für ähnliche Produkte ignorieren“** (Sammelkategorien wie
+  „Alle Artikel“ dort eintragen).
+- **Gewichtung:** Jeder gekaufte Artikel verteilt 1 auf seine Kategorien. Ein Teil, das zu sieben Modellen
+  passt, zählt je Modell nur 1/7. Kategorien unter der Hälfte des Höchstgewichts entfallen – wer zwei
+  CX-Federkugeln und einen Universal-Druckspeicher kauft, bekommt nur CX-Vorschläge.
+- Höchste Summe zuerst, bei Gleichstand Cross-Selling vor Bestseller. Passt nichts, bleibt der Block leer.
 
 Nur Artikel, die im Verkaufskanal **aktiv**, **sichtbar** (Kategorie-Vorschläge: auch in Listen und Suche)
 und **lieferbar** sind; keine Artikel aus der Bestellung und keine anderen Varianten davon, je Hauptartikel

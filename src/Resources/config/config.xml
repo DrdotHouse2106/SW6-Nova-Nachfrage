@@ -52,12 +52,21 @@
             <name>maxRecommendations</name>
             <label>Maximum similar products</label>
             <label lang="de-DE">Höchstens ähnliche Produkte</label>
-            <helpText>First the cross-sellings of the purchased items (e.g. "Customers also bought"), then best sellers from the same categories. Only active, visible, available products that were not purchased. 0 = no recommendations.</helpText>
-            <helpText lang="de-DE">Zuerst die Cross-Sellings der gekauften Artikel (z. B. „Kunden kauften auch“), dann die meistverkauften Artikel derselben Kategorien. Nur aktive, sichtbare, lieferbare und nicht gekaufte Artikel. 0 = keine Vorschläge.</helpText>
+            <helpText>Cross-sellings of the purchased items and best sellers that share a specific category with the purchase. Only active, visible, available products that were not purchased. 0 = no recommendations.</helpText>
+            <helpText lang="de-DE">Cross-Sellings der gekauften Artikel und Bestseller, die eine spezifische Kategorie mit dem Kauf teilen. Nur aktive, sichtbare, lieferbare und nicht gekaufte Artikel. 0 = keine Vorschläge.</helpText>
             <defaultValue>4</defaultValue>
             <min>0</min>
             <max>12</max>
         </input-field>
+
+        <component name="sw-entity-multi-id-select">
+            <name>ignoredCategories</name>
+            <entity>category</entity>
+            <label>Ignore categories for similar products</label>
+            <label lang="de-DE">Kategorien für ähnliche Produkte ignorieren</label>
+            <helpText>Catch-all categories such as "All products" that say nothing about similarity.</helpText>
+            <helpText lang="de-DE">Sammelkategorien wie „Alle Artikel“, die nichts über Ähnlichkeit aussagen.</helpText>
+        </component>
 
         <input-field type="text-editor">
             <name>extraText</name>

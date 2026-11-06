@@ -26,9 +26,8 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Gekaufte Artikel (mit Link zur Produktseite und zum Bewertungsformular) und ähnliche Produkte für die Mail.
  *
- * Ähnliche Produkte: zuerst manuell gepflegte Cross-Selling-Listen der gekauften Artikel, danach Artikel aus
- * dynamischen Cross-Sellings und Bestseller, die mindestens eine spezifische Kategorie (direkt zugeordnet, ohne
- * Oberkategorien und Hauptnavigation) mit dem Kauf teilen – die meisten gemeinsamen Kategorien zuerst. Nur Artikel, die im
+ * Ähnliche Produkte: Cross-Sellings der gekauften Artikel und Bestseller, aber nur mit gemeinsamer spezifischer
+ * Kategorie (siehe RecommendationPicker), nach Gewicht sortiert. Nur Artikel, die im
  * Verkaufskanal aktiv und sichtbar (Kategorie-Vorschläge: auch in Listen) und lieferbar sind; keine Artikel
  * und keine Varianten von Artikeln, die in der Bestellung waren. Preise ohne kundenspezifische Regeln.
  */
@@ -94,7 +93,10 @@ class ProductCollector
     /**
      * @return list<array{id: string, name: string, productNumber: string, url: string, imageUrl: string|null, price: float|null}>
      */
-    public function recommendations(OrderEntity $order, SalesChannelContext $context, int $max): array
+    /**
+     * @param list<string> $ignoredCategories
+     */
+    public function recommendations(OrderEntity $order, SalesChannelContext $context, int $max, array $ignoredCategories = []): array
     {
         if ($max <= 0) {
             return [];
@@ -104,10 +106,10 @@ class ProductCollector
         if ($purchasedIds === []) {
             return [];
         }
-        // Gekaufte Artikel laden: Gruppe (Hauptartikel) und spezifische Kategorien bestimmen
+        // Gekaufte Artikel laden: Gruppe (Hauptartikel) und gewichtete spezifische Kategorien bestimmen
         $purchased = $this->load($purchasedIds, $context, ProductVisibilityDefinition::VISIBILITY_LINK, false, true);
         $excludedGroups = $purchasedIds;
-        $specific = [];
+        $perProduct = [];
         $root = $context->getSalesChannel()->getNavigationCategoryId();
         foreach ($purchased as $product) {
             $excludedGroups[] = $product->getParentId() ?? $product->getId();
@@ -115,26 +117,21 @@ class ProductCollector
             foreach ($product->getCategories() ?? [] as $category) {
                 $paths[$category->getId()] = (string) $category->getPath();
             }
-            foreach (RecommendationPicker::specificCategories($paths, $root) as $categoryId) {
-                $specific[$categoryId] = true;
+            $categories = RecommendationPicker::specificCategories($paths, $root, $ignoredCategories);
+            if ($categories !== []) {
+                $perProduct[] = $categories;
             }
         }
-        $specific = array_keys($specific);
+        $weights = RecommendationPicker::weights($perProduct);
+        $specific = array_keys($weights);
 
-        // Manuell gepflegte Cross-Selling-Listen zuerst; dynamische Cross-Sellings zählen wie Kategorie-Vorschläge
-        $manual = [];
         $candidates = [];
         foreach ($purchasedIds as $productId) {
             try {
                 $elements = $this->crossSellingRoute->load($productId, new Request(), $context, new Criteria())->getResult();
                 foreach ($elements as $element) {
-                    $isList = $element->getCrossSelling()->getType() === 'productList';
                     foreach ($element->getProducts() as $product) {
-                        if ($isList) {
-                            $manual[] = $product->getId();
-                        } else {
-                            $candidates[] = $product->getId();
-                        }
+                        $candidates[] = $product->getId();
                     }
                 }
             } catch (\Throwable $e) {
@@ -161,15 +158,13 @@ class ProductCollector
             }
         }
 
-        $manual = array_values(array_unique($manual));
         $candidates = array_values(array_unique($candidates));
-        $products = $this->load(array_values(array_unique(array_merge($manual, \array_slice($candidates, 0, 80)))), $context, ProductVisibilityDefinition::VISIBILITY_LINK, true);
+        $products = $this->load(\array_slice($candidates, 0, 80), $context, ProductVisibilityDefinition::VISIBILITY_LINK, true);
         $categoriesOf = [];
         foreach ($products as $id => $product) {
             $categoriesOf[$id] = $product->getCategoryIds() ?? [];
         }
-        // Dynamische Cross-Sellings und Bestseller: nur mit gemeinsamer spezifischer Kategorie, die meisten Treffer zuerst
-        $candidates = array_merge($manual, RecommendationPicker::rank($candidates, $categoriesOf, $specific));
+        $candidates = RecommendationPicker::rank($candidates, $categoriesOf, $weights);
 
         $candidates = array_values(array_unique($candidates));
         if ($candidates === []) {

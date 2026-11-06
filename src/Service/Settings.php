@@ -39,6 +39,14 @@ class Settings
         return $this->int('maxRecommendations', $salesChannelId, 4, 0, 12);
     }
 
+    /** @return list<string> */
+    public function ignoredCategories(string $salesChannelId): array
+    {
+        $value = $this->config->get(self::PREFIX . 'ignoredCategories', $salesChannelId);
+
+        return \is_array($value) ? array_values(array_filter($value, 'is_string')) : [];
+    }
+
     public function extraText(string $salesChannelId): string
     {
         return $this->string('extraText', $salesChannelId);

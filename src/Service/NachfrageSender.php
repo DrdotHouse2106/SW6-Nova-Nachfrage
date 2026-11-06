@@ -244,7 +244,7 @@ class NachfrageSender
             'order' => $order,
             'data' => [
                 'products' => $this->products->purchased($order, $context, $reviewsEnabled),
-                'recommendations' => $this->products->recommendations($order, $context, $this->settings->maxRecommendations($scId)),
+                'recommendations' => $this->products->recommendations($order, $context, $this->settings->maxRecommendations($scId), $this->settings->ignoredCategories($scId)),
                 'extraText' => $this->settings->extraText($scId),
                 'unsubscribeUrl' => $this->urls->base($scId, $languageId) . OptOutToken::path($unsubscribeHash, $scId, $this->secret),
                 'googleReviewUrl' => $this->settings->googleReviewUrl($scId),

@@ -1,3 +1,8 @@
+# 1.2.0
+
+- **Ähnliche Produkte gewichtet:** Cross-Sellings (auch „Kunden kauften auch“) zählen wieder wie Bestseller und brauchen eine gemeinsame spezifische Kategorie. Nur Kategorien im Baum des eigenen Verkaufskanals. Jeder gekaufte Artikel verteilt 1 auf seine Kategorien, schwache Kategorien (unter der Hälfte des Höchstgewichts) entfallen – ein Universalteil für viele Modelle verwässert die Vorschläge nicht mehr
+- Neue Einstellung **„Kategorien für ähnliche Produkte ignorieren“** für Sammelkategorien wie „Alle Artikel“
+
 # 1.1.0
 
 - **Treffendere ähnliche Produkte:** Manuelle Cross-Selling-Listen zuerst; dynamische Cross-Sellings und Bestseller nur noch, wenn sie eine spezifische Kategorie mit dem Kauf teilen (direkt zugeordnet, ohne Hauptnavigation und Oberkategorien), die meisten gemeinsamen Kategorien zuerst. Vorher reichte jede gemeinsame Kategorie inkl. sehr allgemeiner, sortiert nur nach Verkaufszahl – dadurch z. B. Teile für andere Fahrzeuge oder fachfremde Artikel

@@ -25,15 +25,22 @@ final class RecommendationPickerTest extends TestCase
 
     public function testSpecificCategories(): void
     {
-        // root: Hauptnavigation, cx liegt unter fahrzeuge, kugeln ist eigenständig
-        $paths = ['root' => '', 'fahrzeuge' => '|root|', 'cx' => '|root|fahrzeuge|', 'kugeln' => '|root|'];
-        self::assertSame(['cx', 'kugeln'], RecommendationPicker::specificCategories($paths, 'root'));
+        // fk: Hauptnavigation, ft: anderer Verkaufskanal, alle: Sammelkategorie, fz/cx: Oberkategorie und Fahrzeug
+        $paths = ['fk' => '', 'fz' => '|fk|', 'cx' => '|fk|fz|', 'alle' => '|fk|', 'kugeln' => '|ft|fw|'];
+        self::assertSame(['cx'], RecommendationPicker::specificCategories($paths, 'fk', ['alle']));
     }
 
-    public function testRankByCommonCategories(): void
+    public function testWeightsAndRank(): void
     {
-        $categories = ['gs' => ['kugeln', 'gs'], 'cx' => ['kugeln', 'cx'], 'dichtung' => ['kaffee'], 'cxteil' => ['cx']];
-        self::assertSame(['cx', 'gs', 'cxteil'], RecommendationPicker::rank(['gs', 'dichtung', 'cx', 'cxteil'], $categories, ['kugeln', 'cx']));
+        // Federkugel CX vorne + hinten + Druckspeicher für 7 Modelle: nur CX zählt
+        $all = ['bx', 'cx', 'gs', 'ds', 'sm', 'xantia', 'xm'];
+        $weights = RecommendationPicker::weights([['cx'], ['cx'], $all]);
+        self::assertSame(['cx'], array_keys($weights));
+        $categories = ['gs35' => ['gs'], 'oring' => ['cx', 'gs'], 'cxteil' => ['cx'], 'kaffee' => ['melitta']];
+        self::assertSame(['oring', 'cxteil'], RecommendationPicker::rank(['gs35', 'oring', 'kaffee', 'cxteil'], $categories, $weights));
+        // Nur der Druckspeicher gekauft: alle Modelle gleich gewichtet
+        self::assertCount(7, RecommendationPicker::weights([$all]));
+        self::assertSame([], RecommendationPicker::weights([]));
     }
 
     public function testReviewLink(): void

@@ -5,8 +5,8 @@ namespace Nova\Nachfrage\Service;
 /**
  * Auswahl der „ähnlichen Produkte“ (reine Logik).
  *
- * Die Kandidaten kommen in Prioritätsreihenfolge (erst manuelle Cross-Selling-Listen, dann nach gemeinsamen
- * spezifischen Kategorien gewichtete Artikel). Gruppe = Hauptartikel-ID (bei Varianten die
+ * Die Kandidaten kommen in Prioritätsreihenfolge (nach gemeinsamen spezifischen Kategorien gewichtet, bei
+ * Gleichstand Cross-Sellings vor Bestsellern). Gruppe = Hauptartikel-ID (bei Varianten die
  * parentId, sonst die eigene ID): Je Gruppe höchstens ein Vorschlag, und keine Gruppe, aus der schon
  * gekauft wurde – also keine andere Farbe/Größe desselben Artikels.
  */
@@ -42,46 +42,65 @@ final class RecommendationPicker
     }
 
     /**
-     * Spezifische Kategorien eines Artikels: direkt zugeordnet, ohne Hauptnavigation und ohne Kategorien,
-     * die Oberkategorie einer anderen zugeordneten Kategorie sind.
+     * Spezifische Kategorien eines Artikels: direkt zugeordnet, im Navigationsbaum des Verkaufskanals, nicht die
+     * Hauptnavigation selbst, nicht ausgeschlossen und keine Oberkategorie einer anderen zugeordneten Kategorie.
      *
      * @param array<string, string> $paths Kategorie-ID → Pfad der Oberkategorien („|a|b|“)
+     * @param list<string> $ignored ausgeschlossene Sammelkategorien (z. B. „Alle Artikel“)
      *
      * @return list<string>
      */
-    public static function specificCategories(array $paths, ?string $rootId): array
+    public static function specificCategories(array $paths, ?string $rootId, array $ignored = []): array
     {
+        $paths = array_filter($paths, static fn (string $path, string $id): bool => $id !== $rootId
+            && !\in_array($id, $ignored, true)
+            && ($rootId === null || str_contains($path, '|' . $rootId . '|')), \ARRAY_FILTER_USE_BOTH);
         $ancestors = [];
         foreach ($paths as $path) {
             foreach (array_filter(explode('|', $path)) as $id) {
                 $ancestors[$id] = true;
             }
         }
-        $out = [];
-        foreach (array_keys($paths) as $id) {
-            if ($id !== $rootId && !isset($ancestors[$id])) {
-                $out[] = $id;
-            }
-        }
 
-        return $out;
+        return array_values(array_filter(array_keys($paths), static fn (string $id): bool => !isset($ancestors[$id])));
     }
 
     /**
-     * Nur Kandidaten mit mindestens einer gemeinsamen Kategorie, die meisten gemeinsamen zuerst;
-     * bei Gleichstand bleibt die bisherige Reihenfolge (Cross-Selling vor Bestsellern).
+     * Gewicht je Kategorie: Jeder gekaufte Artikel verteilt 1 auf seine spezifischen Kategorien. Ein Teil, das zu
+     * vielen Fahrzeugen passt, zählt also je Fahrzeug wenig. Kategorien unter der Hälfte des Höchstgewichts entfallen.
+     *
+     * @param list<list<string>> $perProduct spezifische Kategorien je gekauftem Artikel
+     *
+     * @return array<string, float>
+     */
+    public static function weights(array $perProduct): array
+    {
+        $weights = [];
+        foreach ($perProduct as $categories) {
+            foreach ($categories as $id) {
+                $weights[$id] = ($weights[$id] ?? 0.0) + 1 / \count($categories);
+            }
+        }
+        $limit = $weights === [] ? 0.0 : max($weights) / 2;
+
+        return array_filter($weights, static fn (float $w): bool => $w >= $limit);
+    }
+
+    /**
+     * Nur Kandidaten mit mindestens einer gewichteten Kategorie, höchste Summe zuerst; bei Gleichstand bleibt die
+     * bisherige Reihenfolge (Cross-Selling vor Bestsellern).
      *
      * @param list<string> $candidateIds
      * @param array<string, list<string>> $categoriesOf Kandidat-ID → direkt zugeordnete Kategorien
-     * @param list<string> $specific spezifische Kategorien der gekauften Artikel
+     * @param array<string, float> $weights
      *
      * @return list<string>
      */
-    public static function rank(array $candidateIds, array $categoriesOf, array $specific): array
+    public static function rank(array $candidateIds, array $categoriesOf, array $weights): array
     {
         $scored = [];
         foreach (array_values(array_unique($candidateIds)) as $pos => $id) {
-            $score = \count(array_intersect($categoriesOf[$id] ?? [], $specific));
+            $score = array_sum(array_intersect_key($weights, array_flip($categoriesOf[$id] ?? [])));
             if ($score > 0) {
                 $scored[] = [$score, $pos, $id];
             }

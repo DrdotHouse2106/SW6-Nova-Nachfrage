@@ -1,3 +1,8 @@
+# 1.2.0
+
+- **Weighted similar products:** cross-sellings (including "Customers also bought") are treated like best sellers again and need a shared specific category. Only categories in the sales channel's own tree. Each purchased item spreads a weight of 1 over its categories; weak categories (below half of the top weight) are dropped – a universal part for many models no longer dilutes the suggestions
+- New setting **"Ignore categories for similar products"** for catch-all categories such as "All products"
+
 # 1.1.0
 
 - **More relevant similar products:** manual cross-selling lists first; dynamic cross-sellings and best sellers only if they share a specific category with the purchase (directly assigned, not the main navigation or parent categories), most shared categories first. Previously any shared category, including very broad ones, counted and only sales were used for sorting – leading to parts for other vehicles or unrelated items
