@@ -20,8 +20,8 @@ so that this address never receives such an e-mail again – not after a new ord
 - **One e-mail per order**, X days (default 10) after **all deliveries** of the order are "Shipped". Sending
   log in a separate table – no order is mailed twice.
 - **Content:** purchased items with image, product link and **"Write a review"** button (opens the review
-  form directly), optional **Google review** block, then **similar products** (cross-sellings of the
-  purchased items, then best sellers of the same categories), an **additional text per sales channel** and the
+  form directly), optional **Google review** block, then **similar products** (manual cross-selling
+  lists, then products sharing the most specific categories with the purchase), an **additional text per sales channel** and the
   **objection notice with unsubscribe link** in the footer.
 - **Own e-mail template type** "Nova Nachfrage" (`nova_nachfrage`) with default template de/en (HTML and
   text), editable under *Settings → Email templates*. Sent via Shopware's mail service with the sales
@@ -62,8 +62,9 @@ so that this address never receives such an e-mail again – not after a new ord
   `#nova-review` and ships a small script on product pages that opens the tab (off-canvas on mobile), expands
   the form and scrolls to it. **Guests cannot review in Shopware** (customer account required) – for guest
   orders the template shows the product link and asks for a reply by e-mail.
-- **Similar products:** active cross-sellings of the purchased items (including e.g. "Customers also bought"),
-  then best sellers of the same categories; only active, visible, available products, no purchased items or
+- **Similar products:** manual cross-selling lists of the purchased items first, then products
+  from dynamic cross-sellings and best sellers that share at least one specific category (directly assigned,
+  not the main navigation, not a parent of another assigned category), most shared categories first; only active, visible, available products, no purchased items or
   their variants, one per main product.
 
 ## Variables of the template "Nova Nachfrage"

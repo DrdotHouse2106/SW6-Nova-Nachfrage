@@ -1,3 +1,7 @@
+# 1.1.0
+
+- **More relevant similar products:** manual cross-selling lists first; dynamic cross-sellings and best sellers only if they share a specific category with the purchase (directly assigned, not the main navigation or parent categories), most shared categories first. Previously any shared category, including very broad ones, counted and only sales were used for sorting – leading to parts for other vehicles or unrelated items
+
 # 1.0.0
 
 - First release: **follow-up e-mail after shipping** – at most one e-mail per order, X days (default 10) after all deliveries are "Shipped" (time from the state history); hourly scheduled task and console command `nova-nachfrage:send` (with `--dry-run`, `--pending`, `--order`)

@@ -26,9 +26,9 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Gekaufte Artikel (mit Link zur Produktseite und zum Bewertungsformular) und ähnliche Produkte für die Mail.
  *
- * Ähnliche Produkte: zuerst die Cross-Sellings der gekauften Artikel (alle aktiven, in ihrer Reihenfolge –
- * auch ein Cross-Selling „Kunden kauften auch“, ob als Produktliste oder dynamische Produktgruppe), danach
- * die meistverkauften Artikel aus denselben Kategorien (inkl. Unterkategorien). Nur Artikel, die im
+ * Ähnliche Produkte: zuerst manuell gepflegte Cross-Selling-Listen der gekauften Artikel, danach Artikel aus
+ * dynamischen Cross-Sellings und Bestseller, die mindestens eine spezifische Kategorie (direkt zugeordnet, ohne
+ * Oberkategorien und Hauptnavigation) mit dem Kauf teilen – die meisten gemeinsamen Kategorien zuerst. Nur Artikel, die im
  * Verkaufskanal aktiv und sichtbar (Kategorie-Vorschläge: auch in Listen) und lieferbar sind; keine Artikel
  * und keine Varianten von Artikeln, die in der Bestellung waren. Preise ohne kundenspezifische Regeln.
  */
@@ -104,24 +104,37 @@ class ProductCollector
         if ($purchasedIds === []) {
             return [];
         }
-        // Gekaufte Artikel laden: Gruppe (Hauptartikel) und Kategorien bestimmen
-        $purchased = $this->load($purchasedIds, $context, ProductVisibilityDefinition::VISIBILITY_LINK, false);
+        // Gekaufte Artikel laden: Gruppe (Hauptartikel) und spezifische Kategorien bestimmen
+        $purchased = $this->load($purchasedIds, $context, ProductVisibilityDefinition::VISIBILITY_LINK, false, true);
         $excludedGroups = $purchasedIds;
-        $categoryIds = [];
+        $specific = [];
+        $root = $context->getSalesChannel()->getNavigationCategoryId();
         foreach ($purchased as $product) {
             $excludedGroups[] = $product->getParentId() ?? $product->getId();
-            foreach ($product->getCategoryIds() ?? [] as $categoryId) {
-                $categoryIds[$categoryId] = true;
+            $paths = [];
+            foreach ($product->getCategories() ?? [] as $category) {
+                $paths[$category->getId()] = (string) $category->getPath();
+            }
+            foreach (RecommendationPicker::specificCategories($paths, $root) as $categoryId) {
+                $specific[$categoryId] = true;
             }
         }
+        $specific = array_keys($specific);
 
+        // Manuell gepflegte Cross-Selling-Listen zuerst; dynamische Cross-Sellings zählen wie Kategorie-Vorschläge
+        $manual = [];
         $candidates = [];
         foreach ($purchasedIds as $productId) {
             try {
                 $elements = $this->crossSellingRoute->load($productId, new Request(), $context, new Criteria())->getResult();
                 foreach ($elements as $element) {
+                    $isList = $element->getCrossSelling()->getType() === 'productList';
                     foreach ($element->getProducts() as $product) {
-                        $candidates[] = $product->getId();
+                        if ($isList) {
+                            $manual[] = $product->getId();
+                        } else {
+                            $candidates[] = $product->getId();
+                        }
                     }
                 }
             } catch (\Throwable $e) {
@@ -129,16 +142,16 @@ class ProductCollector
             }
         }
 
-        if ($categoryIds !== []) {
+        if ($specific !== []) {
             $criteria = new Criteria();
             $criteria->addFilter(
                 new ProductAvailableFilter($context->getSalesChannelId(), ProductVisibilityDefinition::VISIBILITY_ALL),
                 new EqualsFilter('available', true),
-                new EqualsAnyFilter('categoriesRo.id', array_keys($categoryIds)),
+                new EqualsAnyFilter('categories.id', $specific),
                 new NotFilter(NotFilter::CONNECTION_OR, [new EqualsAnyFilter('id', $purchasedIds)]),
             );
             $criteria->addSorting(new FieldSorting('sales', FieldSorting::DESCENDING));
-            $criteria->setLimit($max * 4);
+            $criteria->setLimit($max * 10);
             try {
                 foreach ($this->productRepository->searchIds($criteria, $context)->getIds() as $id) {
                     $candidates[] = $id;
@@ -148,11 +161,20 @@ class ProductCollector
             }
         }
 
+        $manual = array_values(array_unique($manual));
+        $candidates = array_values(array_unique($candidates));
+        $products = $this->load(array_values(array_unique(array_merge($manual, \array_slice($candidates, 0, 80)))), $context, ProductVisibilityDefinition::VISIBILITY_LINK, true);
+        $categoriesOf = [];
+        foreach ($products as $id => $product) {
+            $categoriesOf[$id] = $product->getCategoryIds() ?? [];
+        }
+        // Dynamische Cross-Sellings und Bestseller: nur mit gemeinsamer spezifischer Kategorie, die meisten Treffer zuerst
+        $candidates = array_merge($manual, RecommendationPicker::rank($candidates, $categoriesOf, $specific));
+
         $candidates = array_values(array_unique($candidates));
         if ($candidates === []) {
             return [];
         }
-        $products = $this->load(\array_slice($candidates, 0, 60), $context, ProductVisibilityDefinition::VISIBILITY_LINK, true);
         $groupOf = [];
         foreach ($products as $id => $product) {
             $groupOf[$id] = $product->getParentId() ?? $id;
@@ -197,13 +219,16 @@ class ProductCollector
      *
      * @return array<string, SalesChannelProductEntity>
      */
-    private function load(array $ids, SalesChannelContext $context, int $visibility, bool $onlyAvailable): array
+    private function load(array $ids, SalesChannelContext $context, int $visibility, bool $onlyAvailable, bool $withCategories = false): array
     {
         if ($ids === []) {
             return [];
         }
         $criteria = new Criteria($ids);
         $criteria->addAssociation('cover.media');
+        if ($withCategories) {
+            $criteria->addAssociation('categories');
+        }
         $criteria->addFilter(new ProductAvailableFilter($context->getSalesChannelId(), $visibility));
         if ($onlyAvailable) {
             $criteria->addFilter(new EqualsFilter('available', true));

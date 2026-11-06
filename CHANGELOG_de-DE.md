@@ -1,3 +1,7 @@
+# 1.1.0
+
+- **Treffendere ähnliche Produkte:** Manuelle Cross-Selling-Listen zuerst; dynamische Cross-Sellings und Bestseller nur noch, wenn sie eine spezifische Kategorie mit dem Kauf teilen (direkt zugeordnet, ohne Hauptnavigation und Oberkategorien), die meisten gemeinsamen Kategorien zuerst. Vorher reichte jede gemeinsame Kategorie inkl. sehr allgemeiner, sortiert nur nach Verkaufszahl – dadurch z. B. Teile für andere Fahrzeuge oder fachfremde Artikel
+
 # 1.0.0
 
 - Erste Version: **Nachfrage-Mail nach dem Versand** – je Bestellung höchstens eine Mail, X Tage (Standard 10) nachdem alle Lieferungen auf „Versandt“ stehen (Zeitpunkt aus der Statushistorie); stündliche geplante Aufgabe und Konsolenbefehl `nova-nachfrage:send` (mit `--dry-run`, `--pending`, `--order`)

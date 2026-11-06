@@ -23,6 +23,19 @@ final class RecommendationPickerTest extends TestCase
         self::assertSame(['y1', 'z'], RecommendationPicker::pick(['v1', 'x', 'y1', 'y2', 'y1', 'v2', 'z'], $groups, ['p'], 4));
     }
 
+    public function testSpecificCategories(): void
+    {
+        // root: Hauptnavigation, cx liegt unter fahrzeuge, kugeln ist eigenständig
+        $paths = ['root' => '', 'fahrzeuge' => '|root|', 'cx' => '|root|fahrzeuge|', 'kugeln' => '|root|'];
+        self::assertSame(['cx', 'kugeln'], RecommendationPicker::specificCategories($paths, 'root'));
+    }
+
+    public function testRankByCommonCategories(): void
+    {
+        $categories = ['gs' => ['kugeln', 'gs'], 'cx' => ['kugeln', 'cx'], 'dichtung' => ['kaffee'], 'cxteil' => ['cx']];
+        self::assertSame(['cx', 'gs', 'cxteil'], RecommendationPicker::rank(['gs', 'dichtung', 'cx', 'cxteil'], $categories, ['kugeln', 'cx']));
+    }
+
     public function testReviewLink(): void
     {
         self::assertSame('https://shop.example.com/produkt-1/ITEM-001', ReviewLink::productUrl('https://shop.example.com/', '/produkt-1/ITEM-001'));

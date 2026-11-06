@@ -22,7 +22,7 @@ auch nicht nach einer neuen Bestellung oder als Gast.
   „Versandt“ stehen. Versandprotokoll in einer eigenen Tabelle – keine Bestellung wird doppelt angeschrieben.
 - **Inhalt:** gekaufte Artikel mit Bild, Link zur Produktseite und Knopf **„Jetzt bewerten“** (öffnet direkt
   das Bewertungsformular), optional ein Block **Google-Bewertung**, danach **ähnliche Produkte**
-  (Cross-Sellings der gekauften Artikel, dann Bestseller derselben Kategorien), ein **Zusatztext je
+  (manuelle Cross-Sellings, dann Artikel mit den meisten gemeinsamen spezifischen Kategorien), ein **Zusatztext je
   Verkaufskanal** und im Fuß der **Widerspruchshinweis mit Abmeldelink**.
 - **Eigener Mail-Vorlagentyp** „Nova Nachfrage“ (`nova_nachfrage`) mit Standardvorlage de/en (HTML und
   Text), bearbeitbar unter *Einstellungen → E-Mail-Vorlagen*. Versand über Shopwares Mailversand mit dem
@@ -131,9 +131,12 @@ Beispiel für einen **Zusatztext** in einem Kanal mit wenigen Standardartikeln:
 
 Variable `recommendations` (`name`, `productNumber`, `url`, `imageUrl`, `price`):
 
-1. **Cross-Sellings** der gekauften Artikel in ihrer Reihenfolge – alle aktiven Cross-Sellings, also auch
-   ein Cross-Selling „Kunden kauften auch“, gleich ob Produktliste oder dynamische Produktgruppe.
-2. danach die **meistverkauften Artikel derselben Kategorien** (inkl. Unterkategorien).
+1. **Manuell gepflegte Cross-Selling-Listen** (Typ Produktliste) der gekauften Artikel in ihrer Reihenfolge.
+2. danach Artikel aus **dynamischen Cross-Sellings** und die **meistverkauften Artikel**, aber nur wenn sie
+   mindestens eine **spezifische Kategorie** mit dem Kauf teilen. Spezifisch heißt: direkt am gekauften
+   Artikel zugeordnet, nicht die Hauptnavigation und keine Oberkategorie einer anderen zugeordneten
+   Kategorie (z. B. zählt „Citroën CX“, aber nicht „Fahrzeuge“). Artikel mit den meisten gemeinsamen
+   Kategorien kommen zuerst. Gibt es keine Übereinstimmung, bleibt der Block leer.
 
 Nur Artikel, die im Verkaufskanal **aktiv**, **sichtbar** (Kategorie-Vorschläge: auch in Listen und Suche)
 und **lieferbar** sind; keine Artikel aus der Bestellung und keine anderen Varianten davon, je Hauptartikel
