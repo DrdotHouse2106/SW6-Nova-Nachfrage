@@ -1,0 +1,7 @@
+{% sw_extends '@Storefront/storefront/component/account/register.html.twig' %}
+
+{# Nova Nachfrage: Hinweis unter E-Mail/Passwort (Registrierung und Gastbestellung), also bei Erhebung der Adresse #}
+{% block component_account_register_personal_account_fields %}
+    {{ parent() }}
+    {% sw_include '@NovaNachfrage/storefront/nova-nachfrage/checkout-notice.html.twig' with { novaNachfrageNoticeClass: 'form-text mt-1 mb-3' } %}
+{% endblock %}

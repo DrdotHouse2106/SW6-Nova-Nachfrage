@@ -30,8 +30,10 @@ auch nicht nach einer neuen Bestellung oder als Gast.
 - **Widerspruch:** Abmeldelink in jeder Mail (HMAC-signiert), Bestätigungsseite im Shop (Abmeldung erst
   per Knopf/POST), zusätzlich die Header `List-Unsubscribe` und `List-Unsubscribe-Post` (One-Click-Abmeldung
   in Gmail, Apple Mail usw.). Abmeldungen aus Shopwares Newsletter werden auf Wunsch ebenfalls beachtet.
-- **Hinweis bei Erhebung:** kurzer Text auf der Bestellbestätigungsseite unter den AGB-Hinweisen und als
-  Variable für die Bestellbestätigungs-Mail.
+- **Hinweis bei Erhebung:** kurzer Text unter den E-Mail-/Passwortfeldern (Registrierung und Gastbestellung),
+  auf der Bestellbestätigungsseite unter den AGB-Hinweisen und als Variable für die Bestellbestätigungs-Mail.
+- **Nur Bestellungen mit Hinweis:** Stichtag „Nur Bestellungen ab“ (leer = Installationsdatum) und standardmäßig
+  nur Bestellungen aus dem Shop – im Admin angelegte Bestellungen (z. B. telefonisch) bekommen keine Mail.
 - **Schutzregeln:** keine Mail bei stornierten Bestellungen, erstatteten/stornierten Zahlungen,
   zurückgesendeten Lieferungen und Bestellungen ohne Artikel; Mindestabstand je Kunde (Standard 30 Tage);
   Bestellungen, deren Versand länger als 60 Tage zurückliegt, werden nie nachgeholt.
@@ -77,6 +79,8 @@ Verkaufskanal aktivieren.
 | Einstellung | Standard | Bedeutung |
 |---|---|---|
 | Aktiv | aus | Plugin in diesem Verkaufskanal eingeschaltet |
+| Nur Bestellungen ab | leer = Installationsdatum | Ältere Bestellungen bekommen nie eine Mail (ihnen fehlte der Hinweis bei Erhebung) |
+| Nur Bestellungen aus dem Shop | an | Im Admin angelegte Bestellungen überspringen |
 | Tage nach Versand | 10 | Wartezeit ab „Versandt“ |
 | Nie nachholen nach (Tage nach Versand) | 60 | Ältere Versände bekommen nie eine Mail (Schutz beim ersten Einschalten); mindestens Tage + 2 |
 | Mindestabstand je Kunde (Tage) | 30 | Hat dieselbe Adresse in diesem Zeitraum schon eine Nachfrage-Mail bekommen (gleich aus welchem Kanal), entfällt die Mail für weitere Bestellungen. 0 = aus |
@@ -130,7 +134,7 @@ Beispiel für einen **Zusatztext** in einem Kanal mit wenigen Standardartikeln:
 
 ## Ähnliche Produkte
 
-Variable `recommendations` (`name`, `productNumber`, `url`, `imageUrl`, `price`):
+Variable `recommendations` (`name`, `productNumber`, `url`, `imageUrl`, `price`, `referencePrice` mit `price` und `unit` oder `null`). Die Standardvorlage zeigt den Grundpreis und darunter „* inkl. MwSt., zzgl. Versandkosten“ (bei Netto-Kanälen `pricesNet` → „zzgl. MwSt.“):
 
 Kandidaten sind die **Cross-Sellings** der gekauften Artikel (auch „Kunden kauften auch“) und die
 **meistverkauften Artikel**. Vorgeschlagen wird nur, was eine **spezifische Kategorie** mit dem Kauf teilt:
@@ -169,8 +173,11 @@ höchstens ein Vorschlag. Preise ohne kundenspezifische Preisregeln (Standardpre
 
 ## Hinweis bei Erhebung
 
+**Registrierung/Gastbestellung:** Unter den Feldern für E-Mail und Passwort (Block
+`component_account_register_personal_account_fields`).
+
 **Kasse:** Auf der Bestellbestätigungsseite steht unter den AGB-Hinweisen (Block
-`page_checkout_confirm_revocation_control`) ein kurzer Text – Standard:
+`page_checkout_confirm_revocation_control`) derselbe Text, abgesetzt mit einem Strich links – Standard:
 
 > Wir nutzen Ihre E-Mail-Adresse, um Sie nach dem Versand nach Ihrer Meinung zu fragen und auf eigene
 > ähnliche Produkte hinzuweisen. Dem können Sie jederzeit widersprechen, z. B. per Link in jeder dieser

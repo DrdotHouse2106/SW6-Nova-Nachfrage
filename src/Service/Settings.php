@@ -29,6 +29,25 @@ class Settings
         );
     }
 
+    /** Stichtag als „Y-m-d H:i:s“ (UTC) oder null = Installationsdatum verwenden */
+    public function notBefore(string $salesChannelId): ?string
+    {
+        $value = $this->string('notBefore', $salesChannelId);
+        if ($value === '') {
+            return null;
+        }
+        try {
+            return (new \DateTimeImmutable($value))->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    public function onlyStorefrontOrders(string $salesChannelId): bool
+    {
+        return $this->bool('onlyStorefrontOrders', $salesChannelId, true);
+    }
+
     public function minDaysBetweenMails(string $salesChannelId): int
     {
         return $this->int('minDaysBetweenMails', $salesChannelId, 30, 0, 3650);

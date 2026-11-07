@@ -91,7 +91,7 @@ class ProductCollector
     }
 
     /**
-     * @return list<array{id: string, name: string, productNumber: string, url: string, imageUrl: string|null, price: float|null}>
+     * @return list<array{id: string, name: string, productNumber: string, url: string, imageUrl: string|null, price: float|null, referencePrice: array{price: float, unit: string}|null}>
      */
     /**
      * @param list<string> $ignoredCategories
@@ -187,6 +187,7 @@ class ProductCollector
                 'url' => $urls[$id],
                 'imageUrl' => self::imageUrl($product->getCover()?->getMedia()),
                 'price' => self::price($product),
+                'referencePrice' => self::referencePrice($product),
             ];
         }
 
@@ -259,6 +260,21 @@ class ProductCollector
         } catch (\Throwable) {
             return null;
         }
+    }
+
+    /** Grundpreis (PAngV), z. B. ['price' => 12.9, 'unit' => '1 l'], sonst null */
+    private static function referencePrice(SalesChannelProductEntity $product): ?array
+    {
+        try {
+            $reference = $product->getCalculatedPrice()->getReferencePrice();
+        } catch (\Throwable) {
+            return null;
+        }
+        if ($reference === null) {
+            return null;
+        }
+
+        return ['price' => $reference->getPrice(), 'unit' => rtrim(rtrim(number_format($reference->getReferenceUnit(), 3, ',', ''), '0'), ',') . ' ' . $reference->getUnitName()];
     }
 
     /** Kleinstes Vorschaubild ab 300 px Breite, sonst das Original */

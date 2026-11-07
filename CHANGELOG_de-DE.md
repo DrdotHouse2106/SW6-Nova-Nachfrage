@@ -1,3 +1,10 @@
+# 1.3.0
+
+- **Nur Bestellungen mit Hinweis bei Erhebung (§ 7 Abs. 3 UWG):** neue Einstellung „Nur Bestellungen ab“ (leer = Installationsdatum des Plugins) und „Nur Bestellungen aus dem Shop“ (Standard an, überspringt im Admin angelegte Bestellungen)
+- **Hinweis sichtbarer:** zusätzlich unter den E-Mail-/Passwortfeldern bei Registrierung und Gastbestellung; in der Kasse nicht mehr grau, sondern mit Strich abgesetzt
+- **Preisangaben:** ähnliche Produkte mit Grundpreis (falls gepflegt) und Hinweis „* inkl. MwSt., zzgl. Versandkosten“ (Netto-Kanäle: „zzgl. MwSt.“); neue Variablen `referencePrice` und `pricesNet`
+- Beim Update werden unveränderte Standard-Mailvorlagen automatisch ersetzt; angepasste Vorlagen bleiben, dort die Preiszeilen selbst ergänzen (siehe README)
+
 # 1.2.0
 
 - **Ähnliche Produkte gewichtet:** Cross-Sellings (auch „Kunden kauften auch“) zählen wieder wie Bestseller und brauchen eine gemeinsame spezifische Kategorie. Nur Kategorien im Baum des eigenen Verkaufskanals. Jeder gekaufte Artikel verteilt 1 auf seine Kategorien, schwache Kategorien (unter der Hälfte des Höchstgewichts) entfallen – ein Universalteil für viele Modelle verwässert die Vorschläge nicht mehr

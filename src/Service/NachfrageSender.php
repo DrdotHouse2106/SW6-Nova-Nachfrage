@@ -5,6 +5,7 @@ namespace Nova\Nachfrage\Service;
 use Doctrine\DBAL\Connection;
 use Nova\Nachfrage\Installer\MailTemplateInstaller;
 use Psr\Log\LoggerInterface;
+use Shopware\Core\Checkout\Cart\Price\Struct\CartPrice;
 use Shopware\Core\Checkout\Order\OrderCollection;
 use Shopware\Core\Checkout\Order\OrderEntity;
 use Shopware\Core\Content\Mail\Service\AbstractMailService;
@@ -81,7 +82,7 @@ class NachfrageSender
             $policy = $this->settings->policy($scId);
             $testMode = $this->settings->testMode($scId);
 
-            foreach ($this->finder->find([$scId], $policy->maxAge(), $testMode, $orderNumber) as $candidate) {
+            foreach ($this->finder->find([$scId], $policy->maxAge(), $testMode, $orderNumber, $this->settings->notBefore($scId), $this->settings->onlyStorefrontOrders($scId)) as $candidate) {
                 $verdict = $policy->evaluate(
                     $candidate['orderState'],
                     $candidate['transactionState'],
@@ -224,7 +225,7 @@ class NachfrageSender
     /**
      * Bestellung laden und Vorlagenvariablen zusammenstellen.
      *
-     * @return array{order: OrderEntity, data: array{products: list<array<string, mixed>>, recommendations: list<array<string, mixed>>, extraText: string, unsubscribeUrl: string, googleReviewUrl: string, googleReviewText: string, reviewsEnabled: bool, canReview: bool, shopUrl: string, currencyIsoCode: string, optOutAllChannels: bool}}|null
+     * @return array{order: OrderEntity, data: array{products: list<array<string, mixed>>, recommendations: list<array<string, mixed>>, extraText: string, unsubscribeUrl: string, googleReviewUrl: string, googleReviewText: string, reviewsEnabled: bool, canReview: bool, shopUrl: string, currencyIsoCode: string, pricesNet: bool, optOutAllChannels: bool}}|null
      */
     public function buildMail(string $orderId, string $scId, string $unsubscribeHash): ?array
     {
@@ -253,6 +254,7 @@ class NachfrageSender
                 'canReview' => $canReview,
                 'shopUrl' => $this->urls->base($scId, $languageId) . '/',
                 'currencyIsoCode' => $order->getCurrency()?->getIsoCode() ?? 'EUR',
+                'pricesNet' => $context->getTaxState() === CartPrice::TAX_STATE_NET,
                 'optOutAllChannels' => $this->settings->optOutAllChannels($scId),
             ],
         ];

@@ -1,7 +1,11 @@
+{#
+    Hinweis bei Erhebung der E-Mail-Adresse (§ 7 Abs. 3 UWG): in der Kasse und am E-Mail-Feld (Registrierung/Gastbestellung).
+    novaNachfrageNoticeClass: zusätzliche CSS-Klassen je Einbauort.
+#}
 {% block nova_nachfrage_checkout_notice %}
     {% if config('NovaNachfrage.config.active') %}
         {% set novaNachfrageNotice = config('NovaNachfrage.config.checkoutNotice')|trim %}
-        <p class="nova-nachfrage-notice small text-muted mt-2 mb-0">
+        <p class="nova-nachfrage-notice {{ novaNachfrageNoticeClass|default('border-start border-3 ps-2 mt-3 mb-0') }}">
             {% if novaNachfrageNotice %}{{ novaNachfrageNotice|sw_sanitize }}{% else %}{{ 'novaNachfrage.checkoutNotice'|trans|sw_sanitize }}{% endif %}
         </p>
     {% endif %}

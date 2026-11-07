@@ -1,3 +1,10 @@
+# 1.3.0
+
+- **Only orders that saw the notice at collection (§ 7 (3) UWG):** new settings "Only orders placed from" (empty = plugin install date) and "Only orders placed in the shop" (default on, skips orders created in the administration)
+- **More visible notice:** also below the e-mail/password fields at registration and guest checkout; at checkout no longer grey but set off with a line
+- **Price information:** similar products with unit price (if maintained) and "* incl. VAT, plus shipping" (net channels: "plus VAT"); new variables `referencePrice` and `pricesNet`
+- On update, unchanged default e-mail templates are replaced automatically; customised templates are kept – add the price lines yourself (see README)
+
 # 1.2.0
 
 - **Weighted similar products:** cross-sellings (including "Customers also bought") are treated like best sellers again and need a shared specific category. Only categories in the sales channel's own tree. Each purchased item spreads a weight of 1 over its categories; weak categories (below half of the top weight) are dropped – a universal part for many models no longer dilutes the suggestions

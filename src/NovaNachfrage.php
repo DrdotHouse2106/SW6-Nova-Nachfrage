@@ -25,6 +25,7 @@ class NovaNachfrage extends Plugin
     {
         parent::update($updateContext);
         $this->mailTemplates()?->install();
+        $this->mailTemplates()?->updateDefaults();
     }
 
     public function uninstall(UninstallContext $uninstallContext): void

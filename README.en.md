@@ -29,7 +29,10 @@ so that this address never receives such an e-mail again – not after a new ord
 - **Opt-out:** link in every e-mail (HMAC-signed), confirmation page in the shop (opt-out only via button/POST),
   plus the headers `List-Unsubscribe` and `List-Unsubscribe-Post` (one-click). Optionally respects Shopware
   newsletter unsubscriptions.
-- **Notice at collection:** short text on the checkout confirmation page below the terms, and a variable for
+- **Only orders that saw the notice:** cut-off date "Only orders placed from" (empty = install date) and, by
+  default, only orders placed in the shop – orders created in the administration get no e-mail.
+- **Notice at collection:** short text below the e-mail/password fields (registration and guest checkout), on
+  the checkout confirmation page below the terms, and a variable for
   the order confirmation e-mail.
 - **Safeguards:** no e-mail for cancelled orders, refunded/cancelled payments, returned deliveries and
   orders without products; minimum interval per customer (default 30 days); orders shipped more than 60 days

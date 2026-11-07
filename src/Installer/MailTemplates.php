@@ -12,7 +12,8 @@ namespace Nova\Nachfrage\Installer;
  * - reviewsEnabled (Bewertungen im Kanal eingeschaltet), canReview (Kunde hat ein Kundenkonto – Gäste können
  *   in Shopware nicht bewerten)
  * - googleReviewUrl, googleReviewText (leer = Block entfällt)
- * - recommendations: ähnliche Produkte – name, productNumber, url, imageUrl, price
+ * - recommendations: ähnliche Produkte – name, productNumber, url, imageUrl, price, referencePrice (price, unit) oder null
+ * - pricesNet: Preise netto (B2B-Kanal) statt brutto – für den Hinweis „inkl./zzgl. MwSt., zzgl. Versandkosten“
  * - extraText (Zusatztext des Verkaufskanals, HTML), unsubscribeUrl (Abmeldelink), optOutAllChannels
  *
  * Der Fuß mit dem Hinweis auf das Widerspruchsrecht gehört in jede dieser Mails – beim Anpassen bitte stehen lassen.
@@ -59,10 +60,11 @@ final class MailTemplates
         {% for product in recommendations %}
         <tr style="border-top:1px solid #e5e5e5;">
             <td style="width:90px; vertical-align:top;">{% if product.imageUrl %}<a href="{{ product.url }}"><img src="{{ product.imageUrl }}" alt="" width="80" style="display:block; max-width:80px; height:auto; border:0;"></a>{% endif %}</td>
-            <td style="vertical-align:top;"><a href="{{ product.url }}">{{ product.name }}</a>{% if product.price is not null %}<br><span style="color:#555;">{{ product.price|currency(currencyIsoCode) }}</span>{% endif %}</td>
+            <td style="vertical-align:top;"><a href="{{ product.url }}">{{ product.name }}</a>{% if product.price is not null %}<br><span style="color:#555;">{{ product.price|currency(currencyIsoCode) }}*{% if product.referencePrice %} ({{ product.referencePrice.price|currency(currencyIsoCode) }} / {{ product.referencePrice.unit }}){% endif %}</span>{% endif %}</td>
         </tr>
         {% endfor %}
     </table>
+    <p style="font-size:12px; color:#777;">* {% if pricesNet %}zzgl. MwSt.{% else %}inkl. MwSt.{% endif %}, zzgl. Versandkosten</p>
     {% endif %}
 
     {% if extraText %}
@@ -107,10 +109,11 @@ Bei Google bewerten: {{ googleReviewUrl }}
 
 Das könnte Sie auch interessieren:
 {% for product in recommendations %}
-- {{ product.name }}{% if product.price is not null %} – {{ product.price|currency(currencyIsoCode) }}{% endif %}
+- {{ product.name }}{% if product.price is not null %} – {{ product.price|currency(currencyIsoCode) }}*{% if product.referencePrice %} ({{ product.referencePrice.price|currency(currencyIsoCode) }} / {{ product.referencePrice.unit }}){% endif %}{% endif %}
 
   {{ product.url }}
 {% endfor %}
+* {% if pricesNet %}zzgl. MwSt.{% else %}inkl. MwSt.{% endif %}, zzgl. Versandkosten
 {% endif %}
 {% if extraText %}
 
@@ -162,10 +165,11 @@ TWIG;
         {% for product in recommendations %}
         <tr style="border-top:1px solid #e5e5e5;">
             <td style="width:90px; vertical-align:top;">{% if product.imageUrl %}<a href="{{ product.url }}"><img src="{{ product.imageUrl }}" alt="" width="80" style="display:block; max-width:80px; height:auto; border:0;"></a>{% endif %}</td>
-            <td style="vertical-align:top;"><a href="{{ product.url }}">{{ product.name }}</a>{% if product.price is not null %}<br><span style="color:#555;">{{ product.price|currency(currencyIsoCode) }}</span>{% endif %}</td>
+            <td style="vertical-align:top;"><a href="{{ product.url }}">{{ product.name }}</a>{% if product.price is not null %}<br><span style="color:#555;">{{ product.price|currency(currencyIsoCode) }}*{% if product.referencePrice %} ({{ product.referencePrice.price|currency(currencyIsoCode) }} / {{ product.referencePrice.unit }}){% endif %}</span>{% endif %}</td>
         </tr>
         {% endfor %}
     </table>
+    <p style="font-size:12px; color:#777;">* {% if pricesNet %}plus VAT{% else %}incl. VAT{% endif %}, plus shipping</p>
     {% endif %}
 
     {% if extraText %}
@@ -210,10 +214,11 @@ Review us on Google: {{ googleReviewUrl }}
 
 You might also like:
 {% for product in recommendations %}
-- {{ product.name }}{% if product.price is not null %} – {{ product.price|currency(currencyIsoCode) }}{% endif %}
+- {{ product.name }}{% if product.price is not null %} – {{ product.price|currency(currencyIsoCode) }}*{% if product.referencePrice %} ({{ product.referencePrice.price|currency(currencyIsoCode) }} / {{ product.referencePrice.unit }}){% endif %}{% endif %}
 
   {{ product.url }}
 {% endfor %}
+* {% if pricesNet %}plus VAT{% else %}incl. VAT{% endif %}, plus shipping
 {% endif %}
 {% if extraText %}
 

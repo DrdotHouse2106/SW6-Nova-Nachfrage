@@ -14,6 +14,7 @@ use Shopware\Core\Framework\Uuid\Uuid;
  * Versandzeitpunkt je Lieferung: letzter Eintrag in state_machine_history mit Ziel „versendet“.
  * Fehlt die Historie (Status ohne Übergang direkt gesetzt, z. B. per Import), zählt ersatzweise
  * updated_at der Lieferung. Bei mehreren Lieferungen gilt der späteste Versand.
+ * Nur Bestellungen ab dem Stichtag (Hinweis bei Erhebung, § 7 Abs. 3 UWG) und – einstellbar – nur aus dem Shop.
  * Vorfilter: Bestelldatum höchstens Höchstalter + 365 Tage zurück, mindestens eine Lieferung im
  * Zeitfenster geändert (der Wechsel auf „versendet“ setzt updated_at).
  */
@@ -29,7 +30,11 @@ class CandidateFinder
      *
      * @return list<array{orderId: string, orderNumber: string, salesChannelId: string, email: string, orderState: string, transactionState: string|null, deliveries: int, shipped: int, productLines: int, shippedAt: \DateTimeImmutable|null}>
      */
-    public function find(array $salesChannelIds, int $maxAgeDays, bool $testMode, ?string $orderNumber = null): array
+    /**
+     * @param string|null $notBefore Stichtag (UTC, „Y-m-d H:i:s“); null = Installationsdatum des Plugins
+     * @param bool $onlyStorefront im Admin angelegte Bestellungen (created_by_id gesetzt) überspringen
+     */
+    public function find(array $salesChannelIds, int $maxAgeDays, bool $testMode, ?string $orderNumber = null, ?string $notBefore = null, bool $onlyStorefront = true): array
     {
         if ($salesChannelIds === []) {
             return [];
@@ -61,6 +66,7 @@ class CandidateFinder
                  WHERE o.version_id = :live
                    AND o.sales_channel_id IN (:channels)
                    AND o.order_date >= :orderOldest
+                   AND o.order_date_time >= :notBefore
                    AND EXISTS (SELECT 1 FROM order_delivery d2
                                 WHERE d2.order_id = o.id AND d2.order_version_id = o.version_id
                                   AND COALESCE(d2.updated_at, d2.created_at) >= :oldest)
@@ -80,7 +86,11 @@ class CandidateFinder
             'maxAttempts' => SendLog::MAX_ATTEMPTS,
             'live_mode' => $testMode ? 0 : 1,
             'test' => SendLog::STATUS_TEST,
+            'notBefore' => $notBefore ?? $this->installedAt(),
         ];
+        if ($onlyStorefront) {
+            $sql .= ' AND o.created_by_id IS NULL';
+        }
         if ($orderNumber !== null) {
             $sql .= ' AND o.order_number = :orderNumber';
             $params['orderNumber'] = $orderNumber;
@@ -107,6 +117,14 @@ class CandidateFinder
         }
 
         return $out;
+    }
+
+    /** Installationsdatum des Plugins (Stichtag, wenn keiner eingestellt ist) */
+    private function installedAt(): string
+    {
+        $value = $this->connection->fetchOne('SELECT installed_at FROM plugin WHERE name = :name', ['name' => 'NovaNachfrage']);
+
+        return \is_string($value) && $value !== '' ? $value : (new \DateTimeImmutable())->format(Defaults::STORAGE_DATE_TIME_FORMAT);
     }
 
     /**

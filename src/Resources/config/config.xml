@@ -37,6 +37,23 @@
             <max>730</max>
         </input-field>
 
+        <input-field type="datetime">
+            <name>notBefore</name>
+            <label>Only orders placed from</label>
+            <label lang="de-DE">Nur Bestellungen ab</label>
+            <helpText>Orders placed earlier never get an e-mail – the notice at collection (§ 7 (3) UWG) was not shown to them. Empty = date the plugin was installed.</helpText>
+            <helpText lang="de-DE">Ältere Bestellungen bekommen nie eine Mail – ihnen wurde der Hinweis bei Erhebung (§ 7 Abs. 3 UWG) nicht angezeigt. Leer = Installationsdatum des Plugins.</helpText>
+        </input-field>
+
+        <input-field type="bool">
+            <name>onlyStorefrontOrders</name>
+            <label>Only orders placed in the shop</label>
+            <label lang="de-DE">Nur Bestellungen aus dem Shop</label>
+            <helpText>Skips orders created in the administration (e.g. by phone) – those customers did not see the notice at checkout.</helpText>
+            <helpText lang="de-DE">Überspringt im Admin angelegte Bestellungen (z. B. telefonisch) – diese Kunden haben den Hinweis in der Kasse nicht gesehen.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
         <input-field type="int">
             <name>minDaysBetweenMails</name>
             <label>Minimum interval per customer (days)</label>
