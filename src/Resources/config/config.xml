@@ -77,6 +77,15 @@
         </input-field>
 
         <component name="sw-entity-multi-id-select">
+            <name>vehicleGroups</name>
+            <entity>property_group</entity>
+            <label>Vehicle properties for similar products</label>
+            <label lang="de-DE">Fahrzeug-Eigenschaften für ähnliche Produkte</label>
+            <helpText>Property groups (e.g. "Suitable for") whose options count like specific categories: a purchase for vehicle X prefers products for vehicle X.</helpText>
+            <helpText lang="de-DE">Eigenschaftsgruppen (z. B. „Geeignet für“), deren Ausprägungen wie spezifische Kategorien zählen: Wer für Fahrzeug X kauft, bekommt bevorzugt Artikel für Fahrzeug X.</helpText>
+        </component>
+
+        <component name="sw-entity-multi-id-select">
             <name>ignoredCategories</name>
             <entity>category</entity>
             <label>Ignore categories for similar products</label>

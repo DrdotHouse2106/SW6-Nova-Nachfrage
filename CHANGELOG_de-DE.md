@@ -1,3 +1,7 @@
+# 1.4.0
+
+- Neue Einstellung **„Fahrzeug-Eigenschaften für ähnliche Produkte“**: Ausprägungen der gewählten Eigenschaftsgruppen (z. B. „Geeignet für“) zählen wie spezifische Kategorien – gleiche Gewichtung, Bestseller auch über die Eigenschaft. Damit bleiben die Vorschläge fahrzeuggenau, auch wenn ein Shop keine Modell-Kategorien mehr hat
+
 # 1.3.0
 
 - **Nur Bestellungen mit Hinweis bei Erhebung (§ 7 Abs. 3 UWG):** neue Einstellung „Nur Bestellungen ab“ (leer = Installationsdatum des Plugins) und „Nur Bestellungen aus dem Shop“ (Standard an, überspringt im Admin angelegte Bestellungen)

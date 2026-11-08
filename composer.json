@@ -2,7 +2,7 @@
     "name": "nova/nova-nachfrage",
     "description": "Nachfrage nach dem Versand für Shopware 6: Bitte um Bewertung der gekauften Artikel und Hinweis auf eigene ähnliche Produkte (Bestandskundenwerbung) – mit dauerhaft gespeichertem Widerspruch",
     "type": "shopware-platform-plugin",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "license": "MIT",
     "authors": [
         {

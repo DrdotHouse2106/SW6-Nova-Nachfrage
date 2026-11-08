@@ -59,6 +59,14 @@ class Settings
     }
 
     /** @return list<string> */
+    public function vehicleGroups(string $salesChannelId): array
+    {
+        $value = $this->config->get(self::PREFIX . 'vehicleGroups', $salesChannelId);
+
+        return \is_array($value) ? array_values(array_filter($value, 'is_string')) : [];
+    }
+
+    /** @return list<string> */
     public function ignoredCategories(string $salesChannelId): array
     {
         $value = $this->config->get(self::PREFIX . 'ignoredCategories', $salesChannelId);

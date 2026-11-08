@@ -1,3 +1,7 @@
+# 1.4.0
+
+- New setting **"Vehicle properties for similar products"**: options of the selected property groups (e.g. "Suitable for") count like specific categories – same weighting, best sellers also via the property. Keeps suggestions vehicle-specific even without model categories
+
 # 1.3.0
 
 - **Only orders that saw the notice at collection (§ 7 (3) UWG):** new settings "Only orders placed from" (empty = plugin install date) and "Only orders placed in the shop" (default on, skips orders created in the administration)

@@ -85,6 +85,7 @@ Verkaufskanal aktivieren.
 | Nie nachholen nach (Tage nach Versand) | 60 | Ältere Versände bekommen nie eine Mail (Schutz beim ersten Einschalten); mindestens Tage + 2 |
 | Mindestabstand je Kunde (Tage) | 30 | Hat dieselbe Adresse in diesem Zeitraum schon eine Nachfrage-Mail bekommen (gleich aus welchem Kanal), entfällt die Mail für weitere Bestellungen. 0 = aus |
 | Höchstens ähnliche Produkte | 4 | 0 = keine Vorschläge |
+| Fahrzeug-Eigenschaften für ähnliche Produkte | – | z. B. „Geeignet für“: Ausprägungen zählen wie spezifische Kategorien (Fahrzeugsignal ohne Modell-Kategorien) |
 | Kategorien für ähnliche Produkte ignorieren | – | Sammelkategorien wie „Alle Artikel“ |
 | Zusatztext dieses Verkaufskanals (HTML) | leer | Variable `extraText`, erscheint unter den Vorschlägen |
 | Link für Google-Bewertung | leer | nur `https://…`, z. B. `https://g.page/r/…/review`; leer = Block entfällt |

@@ -15,6 +15,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsAnyFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\NotFilter;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\OrFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\System\SalesChannel\Context\AbstractSalesChannelContextFactory;
@@ -95,8 +96,9 @@ class ProductCollector
      */
     /**
      * @param list<string> $ignoredCategories
+     * @param list<string> $vehicleGroups Eigenschaftsgruppen, deren Ausprägungen wie Kategorien zählen (z. B. „Geeignet für“)
      */
-    public function recommendations(OrderEntity $order, SalesChannelContext $context, int $max, array $ignoredCategories = []): array
+    public function recommendations(OrderEntity $order, SalesChannelContext $context, int $max, array $ignoredCategories = [], array $vehicleGroups = []): array
     {
         if ($max <= 0) {
             return [];
@@ -118,6 +120,12 @@ class ProductCollector
                 $paths[$category->getId()] = (string) $category->getPath();
             }
             $categories = RecommendationPicker::specificCategories($paths, $root, $ignoredCategories);
+            // Fahrzeug-Eigenschaften (z. B. „Geeignet für: Citroën CX“) zählen wie spezifische Kategorien
+            foreach ($product->getProperties() ?? [] as $option) {
+                if (\in_array($option->getGroupId(), $vehicleGroups, true)) {
+                    $categories[] = $option->getId();
+                }
+            }
             if ($categories !== []) {
                 $perProduct[] = $categories;
             }
@@ -144,7 +152,7 @@ class ProductCollector
             $criteria->addFilter(
                 new ProductAvailableFilter($context->getSalesChannelId(), ProductVisibilityDefinition::VISIBILITY_ALL),
                 new EqualsFilter('available', true),
-                new EqualsAnyFilter('categories.id', $specific),
+                new OrFilter([new EqualsAnyFilter('categories.id', $specific), new EqualsAnyFilter('properties.id', $specific)]),
                 new NotFilter(NotFilter::CONNECTION_OR, [new EqualsAnyFilter('id', $purchasedIds)]),
             );
             $criteria->addSorting(new FieldSorting('sales', FieldSorting::DESCENDING));
@@ -162,7 +170,7 @@ class ProductCollector
         $products = $this->load(\array_slice($candidates, 0, 80), $context, ProductVisibilityDefinition::VISIBILITY_LINK, true);
         $categoriesOf = [];
         foreach ($products as $id => $product) {
-            $categoriesOf[$id] = $product->getCategoryIds() ?? [];
+            $categoriesOf[$id] = array_merge($product->getCategoryIds() ?? [], $product->getPropertyIds() ?? []);
         }
         $candidates = RecommendationPicker::rank($candidates, $categoriesOf, $weights);
 
@@ -224,6 +232,7 @@ class ProductCollector
         $criteria->addAssociation('cover.media');
         if ($withCategories) {
             $criteria->addAssociation('categories');
+            $criteria->addAssociation('properties');
         }
         $criteria->addFilter(new ProductAvailableFilter($context->getSalesChannelId(), $visibility));
         if ($onlyAvailable) {
