@@ -72,7 +72,8 @@
             "link": "link in the e-mail",
             "one_click": "unsubscribe button in mail program",
             "admin": "administration",
-            "cli": "console"
+            "cli": "console",
+            "checkout": "Checkout (checkbox)"
         }
     }
 }

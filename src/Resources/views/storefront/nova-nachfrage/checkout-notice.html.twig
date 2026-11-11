@@ -8,5 +8,11 @@
         <p class="nova-nachfrage-notice {{ novaNachfrageNoticeClass|default('border-start border-3 ps-2 mt-3 mb-0') }}">
             {% if novaNachfrageNotice %}{{ novaNachfrageNotice|sw_sanitize }}{% else %}{{ 'novaNachfrage.checkoutNotice'|trans|sw_sanitize }}{% endif %}
         </p>
+        {% if novaNachfrageMitKaestchen|default(false) and config('NovaNachfrage.config.checkoutOptOut') %}
+            <div class="form-check nova-nachfrage-optout mt-2">
+                <input class="form-check-input" type="checkbox" name="novaNachfrageOptOut" value="1" id="novaNachfrageOptOut" form="confirmOrderForm">
+                <label class="form-check-label" for="novaNachfrageOptOut">{{ 'novaNachfrage.checkoutOptOut'|trans|sw_sanitize }}</label>
+            </div>
+        {% endif %}
     {% endif %}
 {% endblock %}

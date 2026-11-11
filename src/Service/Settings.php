@@ -84,6 +84,11 @@ class Settings
         return $this->string('checkoutNotice', $salesChannelId);
     }
 
+    public function checkoutOptOut(string $salesChannelId): bool
+    {
+        return $this->bool('checkoutOptOut', $salesChannelId, false);
+    }
+
     public function optOutAllChannels(string $salesChannelId): bool
     {
         return $this->bool('optOutAllChannels', $salesChannelId, true);

@@ -12,6 +12,7 @@
             "invalidTitle": "Invalid link",
             "invalidText": "This unsubscribe link is invalid or incomplete. Please copy the complete link from the e-mail or drop us a line – we will then record your objection manually.",
             "home": "Go to homepage"
-        }
+        },
+        "checkoutOptOut": "No e-mail after shipping (review request and similar products)"
     }
 }

@@ -137,6 +137,15 @@
         </input-field>
 
         <input-field type="bool">
+            <name>checkoutOptOut</name>
+            <label>Checkbox "No e-mail after shipping" at checkout</label>
+            <label lang="de-DE">Kästchen „Keine E-Mail nach dem Versand“ in der Kasse</label>
+            <helpText>Not pre-ticked. Ticking it stores an objection immediately (source "Checkout") – this and later orders get no follow-up e-mail.</helpText>
+            <helpText lang="de-DE">Nicht vorbelegt. Wer es anhakt, widerspricht sofort (Quelle „Kasse“) – diese und spätere Bestellungen bekommen keine Nachfrage-Mail.</helpText>
+            <defaultValue>false</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
             <name>optOutAllChannels</name>
             <label>Opt-out applies to all sales channels</label>
             <label lang="de-DE">Abmeldung gilt für alle Verkaufskanäle</label>

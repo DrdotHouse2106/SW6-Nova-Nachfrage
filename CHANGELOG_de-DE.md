@@ -1,3 +1,7 @@
+# 1.5.0
+
+- Neu: Kästchen **„Keine E-Mail nach dem Versand“** auf der Bestellbestätigungsseite (Einstellung „Kästchen … in der Kasse“, Standard aus, je Verkaufskanal). Nicht vorbelegt; angehakt wird der Widerspruch beim Absenden der Bestellung sofort gespeichert (nur Hash, Quelle „Kasse“, Geltung wie „Abmeldung gilt für alle Verkaufskanäle“) – diese und spätere Bestellungen bekommen keine Nachfrage-Mail
+
 # 1.4.0
 
 - Neue Einstellung **„Fahrzeug-Eigenschaften für ähnliche Produkte“**: Ausprägungen der gewählten Eigenschaftsgruppen (z. B. „Geeignet für“) zählen wie spezifische Kategorien – gleiche Gewichtung, Bestseller auch über die Eigenschaft. Damit bleiben die Vorschläge fahrzeuggenau, auch wenn ein Shop keine Modell-Kategorien mehr hat

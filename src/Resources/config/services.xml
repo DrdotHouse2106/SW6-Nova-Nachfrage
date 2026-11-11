@@ -44,6 +44,13 @@
             <argument>%kernel.secret%</argument>
         </service>
 
+        <service id="Nova\Nachfrage\Subscriber\CheckoutOptOutSubscriber">
+            <argument type="service" id="Nova\Nachfrage\Service\Settings"/>
+            <argument type="service" id="Nova\Nachfrage\Service\OptOutStore"/>
+            <argument type="service" id="request_stack"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
         <service id="Nova\Nachfrage\Subscriber\MailSubscriber">
             <argument type="service" id="Nova\Nachfrage\Service\Settings"/>
             <argument type="service" id="translator"/>

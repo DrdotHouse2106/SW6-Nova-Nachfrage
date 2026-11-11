@@ -72,7 +72,8 @@
             "link": "Link in der Mail",
             "one_click": "Abmeldeknopf im Mailprogramm",
             "admin": "Administration",
-            "cli": "Konsole"
+            "cli": "Konsole",
+            "checkout": "Kasse (Kästchen)"
         }
     }
 }

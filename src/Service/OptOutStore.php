@@ -20,6 +20,7 @@ class OptOutStore
     public const SOURCE_ONE_CLICK = 'one_click';
     public const SOURCE_ADMIN = 'admin';
     public const SOURCE_CLI = 'cli';
+    public const SOURCE_CHECKOUT = 'checkout';
 
     public function __construct(private readonly Connection $connection)
     {

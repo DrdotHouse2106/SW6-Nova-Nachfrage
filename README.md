@@ -81,6 +81,7 @@ Verkaufskanal aktivieren.
 | Aktiv | aus | Plugin in diesem Verkaufskanal eingeschaltet |
 | Nur Bestellungen ab | leer = Installationsdatum | Ältere Bestellungen bekommen nie eine Mail (ihnen fehlte der Hinweis bei Erhebung) |
 | Nur Bestellungen aus dem Shop | an | Im Admin angelegte Bestellungen überspringen |
+| Kästchen „Keine E-Mail nach dem Versand“ in der Kasse | aus | Nicht vorbelegt; angehakt = Widerspruch sofort gespeichert (Quelle „Kasse“) |
 | Tage nach Versand | 10 | Wartezeit ab „Versandt“ |
 | Nie nachholen nach (Tage nach Versand) | 60 | Ältere Versände bekommen nie eine Mail (Schutz beim ersten Einschalten); mindestens Tage + 2 |
 | Mindestabstand je Kunde (Tage) | 30 | Hat dieselbe Adresse in diesem Zeitraum schon eine Nachfrage-Mail bekommen (gleich aus welchem Kanal), entfällt die Mail für weitere Bestellungen. 0 = aus |

@@ -6,12 +6,12 @@
 #}
 {% block page_checkout_confirm_revocation_control %}
     {{ parent() }}
-    {% sw_include '@NovaNachfrage/storefront/nova-nachfrage/checkout-notice.html.twig' %}
+    {% sw_include '@NovaNachfrage/storefront/nova-nachfrage/checkout-notice.html.twig' with { novaNachfrageMitKaestchen: true } %}
 {% endblock %}
 
 {% block page_checkout_confirm_tos_auto_confirmed %}
     {{ parent() }}
     {% if feature('v6.8.0.0') and config('core.cart.showTosCheckbox') %}
-        {% sw_include '@NovaNachfrage/storefront/nova-nachfrage/checkout-notice.html.twig' %}
+        {% sw_include '@NovaNachfrage/storefront/nova-nachfrage/checkout-notice.html.twig' with { novaNachfrageMitKaestchen: true } %}
     {% endif %}
 {% endblock %}

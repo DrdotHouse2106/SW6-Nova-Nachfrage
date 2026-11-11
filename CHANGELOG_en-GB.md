@@ -1,3 +1,7 @@
+# 1.5.0
+
+- New: checkbox **"No e-mail after shipping"** on the order confirmation page (setting, default off, per sales channel). Not pre-ticked; when ticked the objection is stored immediately on order placement (hash only, source "Checkout") – this and later orders get no follow-up e-mail
+
 # 1.4.0
 
 - New setting **"Vehicle properties for similar products"**: options of the selected property groups (e.g. "Suitable for") count like specific categories – same weighting, best sellers also via the property. Keeps suggestions vehicle-specific even without model categories

@@ -12,6 +12,7 @@
             "invalidTitle": "Link ungültig",
             "invalidText": "Dieser Abmeldelink ist ungültig oder unvollständig. Bitte kopieren Sie den vollständigen Link aus der E-Mail oder schreiben Sie uns kurz – wir tragen Ihren Widerspruch dann von Hand ein.",
             "home": "Zur Startseite"
-        }
+        },
+        "checkoutOptOut": "Keine E-Mail nach dem Versand (Bitte um Bewertung und Hinweis auf ähnliche Produkte)"
     }
 }
